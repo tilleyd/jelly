@@ -17,6 +17,7 @@ add_custom_command(
 )
 add_library(geli STATIC
     src/glsl.cpp
+    src/model.cpp
     src/renderer.cpp
     src/window.cpp
 )
