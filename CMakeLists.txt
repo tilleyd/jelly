@@ -16,6 +16,7 @@ add_custom_command(
         src/glsl/fragment.glsl
 )
 add_library(geli STATIC
+    src/core.cpp
     src/glsl.cpp
     src/model.cpp
     src/renderer.cpp

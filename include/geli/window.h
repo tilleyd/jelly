@@ -44,6 +44,11 @@ namespace geli
              **/
             ~Window();
 
+            /**
+             * Swaps the frame buffers to display the rendered image.
+             **/
+            void swapBuffers() const;
+
         private:
 
             SDL_Window* _window;

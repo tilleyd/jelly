@@ -47,3 +47,8 @@ Window::~Window()
     }
     SDL_Quit();
 }
+
+void Window::swapBuffers() const
+{
+    SDL_GL_SwapWindow(_window);
+}

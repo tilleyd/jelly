@@ -1,8 +1,9 @@
-#include <geli/window.h>
-#include <geli/renderer.h>
+#include <geli/core.h>
+#include "demo_sketch.h"
 
 int main(int argc, char* argv[])
 {
-    geli::Window window(1280, 720);
-    geli::Renderer renderer;
+    DemoSketch sketch;
+    geli::Core core;
+    core.execute(sketch, 1280, 720);
 }

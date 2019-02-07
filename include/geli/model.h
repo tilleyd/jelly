@@ -17,6 +17,10 @@ namespace geli
 
         public:
 
+            Model() = delete;
+            Model(const Model&) = delete;
+            Model& operator=(const Model&) = delete;
+
             /**
              * Creates a model from the given vertex array.
              *
