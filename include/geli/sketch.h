@@ -4,6 +4,8 @@
 namespace geli
 {
 
+    class Renderer;
+
     /**
      * Interface for sketch classes that are executable by the geli rendering
      * environment.
@@ -23,8 +25,11 @@ namespace geli
 
             /**
              * Called on every iteration of the rendering loop.
+             *
+             * \param r
+             *     The renderer that can be used to access rendering functions.
              **/
-            virtual void draw() = 0;
+            virtual void draw(const Renderer& r) = 0;
 
     };
 

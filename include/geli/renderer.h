@@ -1,13 +1,19 @@
 #ifndef _GELI_RENDERER_H_
 #define _GELI_RENDERER_H_
 
-#include <GL/glew.h>
+#include <geli/model.h>
+#include <memory>
 
 namespace geli
 {
 
+    class Model;
+
     /**
      * Renders objects to the frame buffer.
+     *
+     * Models are cached in the renderer and are then rendered with a model
+     * matrix for transformations.
      *
      * \author
      *     Duncan Tilley
@@ -21,50 +27,37 @@ namespace geli
             Renderer& operator=(const Renderer&) = delete;
 
             /**
-             * Creates the shaders used for rendering.
+             * Creates the primitive models.
+             *
+             * The models used for rectangles, triangles and ellipses are
+             * created and cached for reuse.
              **/
             Renderer();
 
             /**
-             * Clears all resources used by the renderer.
+             * Draws a square with the current render state.
              **/
-            ~Renderer();
+            void renderSquare() const;
 
         private:
 
             /**
-             * Links the vertex and fragment shaders.
-             *
-             * \param vert
-             *     A handle to the compiled OpenGL vertex shader.
-             * \param frag
-             *     A handle to the compiled OpenGL fragment shader.
-             *
-             * \return
-             *     A handle to the linked OpenGL shader program.
-             *
-             * \throws
-             *     `const char*` when the linking fails.
+             * Creates the cached square model used for rectangles.
              **/
-            GLuint linkProgram(GLuint vert, GLuint frag) const;
+            void initSquare();
 
             /**
-             * Compiles the given GLSL code as the specified type of shader.
-             *
-             * \param glsl
-             *     Shader source code.
-             * \param type
-             *     The shader type constant.
-             *
-             * \return
-             *     A handle to the compiled OpenGL shader.
-             *
-             * \throws
-             *     `const char*` when the compilation fails.
+             * Creates the cached triangle model.
              **/
-            GLuint compileShader(const char* glsl, GLenum type) const;
+            void initTriangle();
 
-            GLuint _shader;
+            /**
+             * Creates the cached circle model used for ellipses.
+             **/
+            void initCircle();
+
+            // cached primitives
+            std::unique_ptr<Model> _square;
 
     };
 

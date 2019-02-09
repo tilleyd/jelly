@@ -1,9 +1,7 @@
 #ifndef _GELI_CORE_H_
 #define _GELI_CORE_H_
 
-#include <geli/renderer.h>
 #include <geli/sketch.h>
-#include <geli/window.h>
 
 namespace geli
 {
@@ -26,12 +24,12 @@ namespace geli
             Core& operator=(const Core&) = delete;
 
             /**
-             * Initializes the geli core.
+             * Initializes the SDL and geli environments.
              **/
             Core();
 
             /**
-             * Clears resources used by geli core.
+             * Clears resources used by the SDL and geli environments.
              **/
             ~Core();
 
@@ -61,9 +59,7 @@ namespace geli
 
         private:
 
-            Window*   _window;
-            Renderer* _renderer;
-            bool      _executing;
+            bool    _executing;
 
     };
 

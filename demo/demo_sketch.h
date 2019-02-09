@@ -2,6 +2,7 @@
 #define _SKETCH_H_
 
 #include <geli/sketch.h>
+#include <geli/renderer.h>
 
 class DemoSketch: public geli::Sketch
 {
@@ -10,14 +11,16 @@ class DemoSketch: public geli::Sketch
 
         void init();
 
-        void draw();
+        void draw(const geli::Renderer&);
 
 };
 
 void DemoSketch::init()
 {}
 
-void DemoSketch::draw()
-{}
+void DemoSketch::draw(const geli::Renderer& r)
+{
+    r.renderSquare();
+}
 
 #endif

@@ -20,6 +20,7 @@ add_library(geli STATIC
     src/glsl.cpp
     src/model.cpp
     src/renderer.cpp
+    src/shader.cpp
     src/window.cpp
 )
 set_target_properties(geli PROPERTIES

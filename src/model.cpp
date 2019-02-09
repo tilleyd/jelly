@@ -2,8 +2,8 @@
 
 using geli::Model;
 
-Model::Model(float vert[], unsigned int n, unsigned int mode) :
-    _numVertices(0),
+Model::Model(const float vert[], unsigned int n, unsigned int mode) :
+    _numVertices(n),
     _vbo(0),
     _vao(0),
     _renderMode(mode)
@@ -17,12 +17,7 @@ Model::Model(float vert[], unsigned int n, unsigned int mode) :
     glBufferData(GL_ARRAY_BUFFER, n * sizeof(float) * 3, vert, GL_STATIC_DRAW);
 
     // configure vertex array attributes
-    glVertexAttribPointer(0,
-                          3,
-                          GL_FLOAT,
-                          GL_FALSE,
-                          3 * sizeof(float),
-                          (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray(0);
 
     glBindVertexArray(0);

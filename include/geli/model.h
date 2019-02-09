@@ -34,7 +34,7 @@ namespace geli
              *     The OpenGL rendering mode used to render the vertices such
              *     as GL_POINTS, GL_LINE_STRIP, GL_TRIANGLES, etc.
              **/
-            Model(float vert[],
+            Model(const float vert[],
                   unsigned int n,
                   unsigned int mode = GL_TRIANGLES);
 
