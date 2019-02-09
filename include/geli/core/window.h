@@ -52,9 +52,27 @@ namespace geli
                  **/
                 void swapBuffers() const;
 
+                /**
+                 * Returns the height of the window in pixels.
+                 **/
+                unsigned int getHeight() const
+                {
+                    return _height;
+                }
+
+                /**
+                 * Returns the width of the window in pixels.
+                 **/
+                unsigned int getWidth() const
+                {
+                    return _width;
+                }
+
             private:
 
-                SDL_Window* _window;
+                SDL_Window*  _window;
+                unsigned int _width;
+                unsigned int _height;
 
         };
 

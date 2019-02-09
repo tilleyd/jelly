@@ -44,6 +44,14 @@ namespace geli
                 ~Shader();
 
                 /**
+                 * Sets the u_MMatrix shader uniform.
+                 *
+                 * \param mm
+                 *     The mat4 representing the model matrix.
+                 **/
+                void setMMatrix(const glm::mat4& mm);
+
+                /**
                  * Sets the u_VMatrix shader uniform.
                  *
                  * \param vm
@@ -95,6 +103,7 @@ namespace geli
 
                 GLuint _shader;
 
+                GLuint _mMatrixUniform;
                 GLuint _vMatrixUniform;
                 GLuint _pMatrixUniform;
 

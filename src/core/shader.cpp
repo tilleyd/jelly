@@ -16,6 +16,7 @@ Shader::Shader() :
     glUseProgram(_shader);
 
     // get shader uniforms
+    _mMatrixUniform = glGetUniformLocation(_shader, "u_MMatrix");
     _vMatrixUniform = glGetUniformLocation(_shader, "u_VMatrix");
     _pMatrixUniform = glGetUniformLocation(_shader, "u_PMatrix");
 }
@@ -25,6 +26,11 @@ Shader::~Shader()
     if (_shader) {
         glDeleteProgram(_shader);
     }
+}
+
+void Shader::setMMatrix(const glm::mat4& mm)
+{
+    glUniformMatrix4fv(_mMatrixUniform, 1, GL_FALSE, &mm[0][0]);
 }
 
 void Shader::setVMatrix(const glm::mat4& vm)

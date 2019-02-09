@@ -35,6 +35,29 @@ namespace geli
                  **/
                 View(Shader&);
 
+                /**
+                 * Sets the projection to an orthographic projection.
+                 *
+                 * \param l
+                 *     The minimum (left) x-coordinate visible.
+                 * \param r
+                 *     The maximum (right) x-coordinate visible.
+                 * \param b
+                 *     The minimum (bottom) y-coordinate visible.
+                 * \param t
+                 *     The maximum (top) y-coordinate visible.
+                 * \param n
+                 *     The minimum (nearest) z-coordinate visible.
+                 * \param f
+                 *     The maximum (farthest) z-coordinate visible.
+                 **/
+                void orthographic(float l,
+                                  float r,
+                                  float b,
+                                  float t,
+                                  float n,
+                                  float f);
+
             private:
 
                 glm::mat4 _vMatrix;

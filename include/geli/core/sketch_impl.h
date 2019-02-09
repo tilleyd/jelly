@@ -19,6 +19,10 @@ namespace geli
         /**
          * A PIMPL implementation of the Sketch object.
          *
+         * For brevity of documentation, the methods of SketchImpl have no
+         * descriptions. Simply refer to the method of the same name in
+         * Sketch for information.
+         *
          * \author
          *     Duncan Tilley
          **/
@@ -30,32 +34,23 @@ namespace geli
                 SketchImpl(SketchImpl&) = delete;
                 SketchImpl& operator=(const SketchImpl&) = delete;
 
-                /**
-                 * See Sketch::Sketch().
-                 **/
                 SketchImpl();
 
-                /**
-                 * See Sketch::~Sketch().
-                 **/
                 ~SketchImpl();
 
-                /**
-                 * See Sketch::execute().
-                 **/
-                void execute(Sketch& sketch,
-                             unsigned int width,
-                             unsigned int height);
+                void execute(Sketch& sketch, unsigned int, unsigned int);
 
-                /**
-                 * See Sketch::rect().
-                 **/
-                void rect();
+                void rect(float, float, float, float);
 
-                /**
-                 * See Sketch::stop().
-                 **/
                 void stop();
+
+                void ortho();
+
+                void ortho(float, float, float, float, float, float);
+
+                unsigned int height() const;
+
+                unsigned int width() const;
 
             private:
 

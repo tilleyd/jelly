@@ -78,14 +78,35 @@ namespace geli
             // OVERRIDABLE METHODS
             //--------------------
 
-            //-------------
-            // GELI METHODS
-            //-------------
+            //------------------
+            // RENDERING METHODS
+            //------------------
 
             /**
              * Draws a rectangle.
+             *
+             * \param x
+             *     X-coordinate of the rectangle center.
+             * \param y
+             *     Y-coordinate of the rectangle center.
+             * \param w
+             *     Width of the rectangle.
+             * \param h
+             *     Height of the rectangle.
              **/
-            void rect();
+            void rect(float x, float y, float w, float h);
+
+            /**
+             * Draws a square.
+             *
+             * \param x
+             *     X-coordinate of the square center.
+             * \param y
+             *     Y-coordinate of the square center.
+             * \param e
+             *     Extent (width and height) of the square.
+             **/
+            void square(float x, float y, float e);
 
             /**
              * Stops the execution of the sketch.
@@ -95,6 +116,64 @@ namespace geli
              *     current iteration of the rendering loop.
              **/
             void stop();
+
+            //--------------------
+            // VIEW/CAMERA METHODS
+            //--------------------
+
+            /**
+             * Creates an orthographic view of the rendering environment.
+             * This is the default view mode when starting the sketch and is
+             * the same as
+             * ortho(-width()/2, width()/2, -height()/2, height()/2).
+             **/
+            void ortho();
+
+            /**
+             * Creates an orthographic view of the rendering environment.
+             *
+             * \param l
+             *     The minimum (left) x-coordinate visible.
+             * \param r
+             *     The maximum (right) x-coordinate visible.
+             * \param b
+             *     The minimum (bottom) y-coordinate visible.
+             * \param t
+             *     The maximum (top) y-coordinate visible.
+             **/
+            void ortho(float l, float r, float b, float t);
+
+            /**
+             * Creates an orthographic view of the rendering environment.
+             *
+             * \param l
+             *     The minimum (left) x-coordinate visible.
+             * \param r
+             *     The maximum (right) x-coordinate visible.
+             * \param b
+             *     The minimum (bottom) y-coordinate visible.
+             * \param t
+             *     The maximum (top) y-coordinate visible.
+             * \param n
+             *     The minimum (nearest) z-coordinate visible.
+             * \param f
+             *     The maximum (farthest) z-coordinate visible.
+             **/
+            void ortho(float l, float r, float b, float t, float n, float f);
+
+            //----------
+            // ACCESSORS
+            //----------
+
+            /**
+             * Returns the height of the view port in pixels.
+             **/
+            unsigned int height() const;
+
+            /**
+             * Returns the width of the view port in pixels.
+             **/
+            unsigned int width() const;
 
         private:
 

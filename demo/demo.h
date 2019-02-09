@@ -12,6 +12,10 @@ class Demo : public geli::Sketch
 
         void draw();
 
+    private:
+
+        int counter;
+
 };
 
 #endif

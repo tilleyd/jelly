@@ -5,7 +5,9 @@
 using geli::core::Window;
 
 Window::Window(unsigned int width, unsigned int height) :
-    _window(nullptr)
+    _window(nullptr),
+    _width(width),
+    _height(height)
 {
     // create the SDL window
     _window = SDL_CreateWindow("geli window",

@@ -34,8 +34,9 @@ void SketchImpl::execute(Sketch& sketch,
     // set up the environment
     _window.reset(new Window(width, height));
     _shader.reset(new Shader);
-    _renderer.reset(new Renderer);
+    _renderer.reset(new Renderer(*_shader));
     _view.reset(new View(*_shader));
+    ortho();
 
     _executing = true;
     sketch.setup();
@@ -59,12 +60,37 @@ void SketchImpl::execute(Sketch& sketch,
     }
 }
 
-void SketchImpl::rect()
+void SketchImpl::rect(float x, float y, float w, float h)
 {
+    _renderer->resetTransform();
+    _renderer->translateTransform(x, y, 0.0f);
+    _renderer->scaleTransform(w, h, 1.0f);
     _renderer->renderSquare();
 }
 
 void SketchImpl::stop()
 {
     _executing = false;
+}
+
+void SketchImpl::ortho()
+{
+    float r = width() * 0.5f;
+    float t = height() * 0.5f;
+    ortho(-r, r, -t, t, -1.0f, 1.0f);
+}
+
+void SketchImpl::ortho(float l, float r, float b, float t, float n, float f)
+{
+    _view->orthographic(l, r, b, t, n, f);
+}
+
+unsigned int SketchImpl::height() const
+{
+    return _window->getHeight();
+}
+
+unsigned int SketchImpl::width() const
+{
+    return _window->getWidth();
 }

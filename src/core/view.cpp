@@ -13,3 +13,9 @@ View::View(Shader& shader) :
     _shader.setVMatrix(_vMatrix);
     _shader.setPMatrix(_pMatrix);
 }
+
+void View::orthographic(float l, float r, float b, float t, float n, float f)
+{
+    _pMatrix = glm::ortho(l, r, b, t, n, f);
+    _shader.setPMatrix(_pMatrix);
+}
