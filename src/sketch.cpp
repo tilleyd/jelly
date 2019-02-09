@@ -23,6 +23,16 @@ void Sketch::execute(unsigned int width, unsigned int height)
     _pimpl->execute(*this, width, height);
 }
 
+void Sketch::background(float r, float g, float b, float a)
+{
+    _pimpl->background(r, g, b, a);
+}
+
+void Sketch::color(float r, float g, float b, float a)
+{
+    _pimpl->color(r, g, b, a);
+}
+
 void Sketch::rect(float x, float y, float w, float h)
 {
     _pimpl->rect(x, y, w, h);

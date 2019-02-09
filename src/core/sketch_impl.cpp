@@ -37,6 +37,7 @@ void SketchImpl::execute(Sketch& sketch,
     _renderer.reset(new Renderer(*_shader));
     _view.reset(new View(*_shader));
     ortho();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     _executing = true;
     sketch.setup();
@@ -52,12 +53,21 @@ void SketchImpl::execute(Sketch& sketch,
             }
         }
 
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         sketch.draw();
         _window->swapBuffers();
 
     }
+}
+
+void SketchImpl::background(float r, float g, float b, float a)
+{
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void SketchImpl::color(float r, float g, float b, float a)
+{
+    _shader->setColor(r, g, b, a);
 }
 
 void SketchImpl::rect(float x, float y, float w, float h)

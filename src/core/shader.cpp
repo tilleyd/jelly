@@ -19,6 +19,7 @@ Shader::Shader() :
     _mMatrixUniform = glGetUniformLocation(_shader, "u_MMatrix");
     _vMatrixUniform = glGetUniformLocation(_shader, "u_VMatrix");
     _pMatrixUniform = glGetUniformLocation(_shader, "u_PMatrix");
+    _colorUniform = glGetUniformLocation(_shader, "u_Color");
 }
 
 Shader::~Shader()
@@ -41,6 +42,12 @@ void Shader::setVMatrix(const glm::mat4& vm)
 void Shader::setPMatrix(const glm::mat4& pm)
 {
     glUniformMatrix4fv(_pMatrixUniform, 1, GL_FALSE, &pm[0][0]);
+}
+
+void Shader::setColor(float r, float g, float b, float a)
+{
+    glm::vec4 color(r, g, b, a);
+    glUniform4fv(_colorUniform, 1, &color[0]);
 }
 
 GLuint Shader::linkProgram(GLuint vert, GLuint frag) const

@@ -67,6 +67,20 @@ namespace geli
                  **/
                 void setPMatrix(const glm::mat4& pm);
 
+                /**
+                 * Sets the u_Color shader uniform.
+                 *
+                 * \param r
+                 *     Red value in range [0.0, 1.0].
+                 * \param g
+                 *     Green value in range [0.0, 1.0].
+                 * \param b
+                 *     Blue value in range [0.0, 1.0].
+                 * \param a
+                 *     Alpha value in range [0.0, 1.0].
+                 **/
+                void setColor(float r, float g, float b, float a);
+
             private:
 
                 /**
@@ -106,6 +120,7 @@ namespace geli
                 GLuint _mMatrixUniform;
                 GLuint _vMatrixUniform;
                 GLuint _pMatrixUniform;
+                GLuint _colorUniform;
 
         };
 

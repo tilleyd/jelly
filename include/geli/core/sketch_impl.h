@@ -38,15 +38,26 @@ namespace geli
 
                 ~SketchImpl();
 
-                void execute(Sketch& sketch, unsigned int, unsigned int);
+                void execute(Sketch& sketch,
+                             unsigned int width,
+                             unsigned int height);
 
-                void rect(float, float, float, float);
+                void background(float r, float g, float b, float a);
+
+                void color(float r, float g, float b, float a);
+
+                void rect(float x, float y, float w, float h);
 
                 void stop();
 
                 void ortho();
 
-                void ortho(float, float, float, float, float, float);
+                void ortho(float l,
+                           float r,
+                           float b,
+                           float t,
+                           float n,
+                           float f);
 
                 unsigned int height() const;
 

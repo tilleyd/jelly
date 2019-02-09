@@ -83,6 +83,35 @@ namespace geli
             //------------------
 
             /**
+             * Clears the rendering environment and sets the background to the
+             * provided colors.
+             *
+             * \param r
+             *     Red value in range [0.0, 1.0].
+             * \param g
+             *     Green value in range [0.0, 1.0].
+             * \param b
+             *     Blue value in range [0.0, 1.0].
+             * \param a
+             *     Alpha value in range [0.0, 1.0].
+             **/
+            void background(float r, float g, float b, float a = 1.0f);
+
+            /**
+             * Sets the color for any future model renders.
+             *
+             * \param r
+             *     Red value in range [0.0, 1.0].
+             * \param g
+             *     Green value in range [0.0, 1.0].
+             * \param b
+             *     Blue value in range [0.0, 1.0].
+             * \param a
+             *     Alpha value in range [0.0, 1.0].
+             **/
+            void color(float r, float g, float b, float a = 1.0f);
+
+            /**
              * Draws a rectangle.
              *
              * \param x
