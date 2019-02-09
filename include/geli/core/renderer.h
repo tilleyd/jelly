@@ -75,17 +75,17 @@ namespace geli
                  **/
                 void renderSquare() const;
 
+                /**
+                 * Draws a circle with the current transformation.
+                 **/
+                void renderCircle() const;
+
             private:
 
                 /**
                  * Creates the cached square model used for rectangles.
                  **/
                 void initSquare();
-
-                /**
-                 * Creates the cached triangle model.
-                 **/
-                void initTriangle();
 
                 /**
                  * Creates the cached circle model used for ellipses.
@@ -95,6 +95,7 @@ namespace geli
                 Shader&                _shader;
                 glm::mat4              _mMatrix;
                 std::unique_ptr<Model> _square;
+                std::unique_ptr<Model> _circle;
 
         };
 

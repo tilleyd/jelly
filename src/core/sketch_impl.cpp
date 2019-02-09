@@ -37,6 +37,9 @@ void SketchImpl::execute(Sketch& sketch,
     _renderer.reset(new Renderer(*_shader));
     _view.reset(new View(*_shader));
     ortho();
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     _executing = true;
@@ -65,9 +68,27 @@ void SketchImpl::background(float r, float g, float b, float a)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+void SketchImpl::circle(float x, float y, float d)
+{
+    ellipse(x, y, d, d);
+}
+
 void SketchImpl::color(float r, float g, float b, float a)
 {
     _shader->setColor(r, g, b, a);
+}
+
+void SketchImpl::ellipse(float x, float y, float w, float h)
+{
+    _renderer->resetTransform();
+    _renderer->translateTransform(x, y, 0.0f);
+    _renderer->scaleTransform(w, h, 1.0f);
+    _renderer->renderCircle();
+}
+
+void SketchImpl::line(float x1, float y1, float x2, float y2)
+{
+    // TODO
 }
 
 void SketchImpl::rect(float x, float y, float w, float h)

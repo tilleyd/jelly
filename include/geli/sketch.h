@@ -98,6 +98,18 @@ namespace geli
             void background(float r, float g, float b, float a = 1.0f);
 
             /**
+             * Draws a circle.
+             *
+             * \param x
+             *     X-coordinate of the circle center.
+             * \param y
+             *     Y-coordinate of the circle center.
+             * \param d
+             *     The diameter of the circle.
+             **/
+            void circle(float x, float y, float d);
+
+            /**
              * Sets the color for any future model renders.
              *
              * \param r
@@ -110,6 +122,34 @@ namespace geli
              *     Alpha value in range [0.0, 1.0].
              **/
             void color(float r, float g, float b, float a = 1.0f);
+
+            /**
+             * Draws an ellipse.
+             *
+             * \param x
+             *     X-coordinate of the ellipse center.
+             * \param y
+             *     Y-coordinate of the ellipse center.
+             * \param w
+             *     The width of the ellipse.
+             * \param h
+             *     The height of the ellipse.
+             **/
+            void ellipse(float x, float y, float w, float h);
+
+            /**
+             * Draws a line between two points.
+             *
+             * \param x1
+             *     X-coordinate of the first point.
+             * \param y1
+             *     Y-coordinate of the first point.
+             * \param x2
+             *     X-coordinate of the second point.
+             * \param y2
+             *     Y-coordinate of the second point.
+             **/
+            void line(float x1, float y1, float x2, float y2);
 
             /**
              * Draws a rectangle.

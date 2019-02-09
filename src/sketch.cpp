@@ -28,9 +28,24 @@ void Sketch::background(float r, float g, float b, float a)
     _pimpl->background(r, g, b, a);
 }
 
+void Sketch::circle(float x, float y, float d)
+{
+    _pimpl->circle(x, y, d);
+}
+
 void Sketch::color(float r, float g, float b, float a)
 {
     _pimpl->color(r, g, b, a);
+}
+
+void Sketch::ellipse(float x, float y, float w, float h)
+{
+    _pimpl->ellipse(x, y, w, h);
+}
+
+void Sketch::line(float x1, float y1, float x2, float y2)
+{
+    _pimpl->line(x1, y1, x2, y2);
 }
 
 void Sketch::rect(float x, float y, float w, float h)

@@ -44,7 +44,13 @@ namespace geli
 
                 void background(float r, float g, float b, float a);
 
+                void circle(float x, float y, float d);
+
                 void color(float r, float g, float b, float a);
+
+                void ellipse(float x, float y, float w, float h);
+
+                void line(float x1, float y1, float x2, float y2);
 
                 void rect(float x, float y, float w, float h);
 

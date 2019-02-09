@@ -27,7 +27,6 @@ Window::Window(unsigned int width, unsigned int height) :
     if (glewInit() != GLEW_OK) {
         throw "failed to initialise GLEW";
     }
-    glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, width, height);
     // enable V-Sync
     if (SDL_GL_SetSwapInterval(1) < 0) {
