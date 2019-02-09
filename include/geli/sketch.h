@@ -4,11 +4,20 @@
 namespace geli
 {
 
-    class Renderer;
+    namespace core
+    {
+        class SketchImpl;
+    };
 
     /**
-     * Interface for sketch classes that are executable by the geli rendering
-     * environment.
+     * Interface for sketch classes that create and execute within the geli
+     * rendering environment.
+     *
+     * The sketch presents various virtual methods that can be overridden by
+     * your own sketches and have plenty protected methods that can be called to
+     * access the geli functionality.
+     *
+     * The internal implementation classes are hidden via the PIMPL principle.
      *
      * \author
      *     Duncan Tilley
@@ -18,18 +27,78 @@ namespace geli
 
         public:
 
+            Sketch& operator=(const Sketch&) = delete;
+
+            /**
+             * Sets up the geli environment.
+             *
+             * \throws
+             *     `const char*` on any setup failure.
+             **/
+            Sketch();
+
+            /**
+             * Clears the resources used by the geli environment.
+             **/
+            virtual ~Sketch();
+
+            /**
+             * Starts the execution of the sketch. setup() is called first,
+             * whereafter draw() is called repeatedly until stop() is called.
+             *
+             * \param width
+             *     The width of the window in pixels.
+             * \param height
+             *     The height of the window in pixels.
+             *
+             * \throws
+             *     'const char*' on any setup failure.
+             **/
+            void execute(unsigned int width, unsigned int height);
+
+        protected:
+
+            friend class core::SketchImpl;
+
+            //---------------------
+            // PURE VIRTUAL METHODS
+            //---------------------
+
             /**
              * Called when the sketch is first run.
              **/
-            virtual void init() = 0;
+            virtual void setup() = 0;
 
             /**
              * Called on every iteration of the rendering loop.
-             *
-             * \param r
-             *     The renderer that can be used to access rendering functions.
              **/
-            virtual void draw(const Renderer& r) = 0;
+            virtual void draw() = 0;
+
+            //--------------------
+            // OVERRIDABLE METHODS
+            //--------------------
+
+            //-------------
+            // GELI METHODS
+            //-------------
+
+            /**
+             * Draws a rectangle.
+             **/
+            void rect();
+
+            /**
+             * Stops the execution of the sketch.
+             *
+             * \note
+             *     This does not immediately stop but will stop after the
+             *     current iteration of the rendering loop.
+             **/
+            void stop();
+
+        private:
+
+            core::SketchImpl* _pimpl;
 
     };
 

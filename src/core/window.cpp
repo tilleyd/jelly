@@ -1,8 +1,8 @@
-#include <geli/window.h>
+#include <geli/core/window.h>
 
 #include <GL/glew.h>
 
-using geli::Window;
+using geli::core::Window;
 
 Window::Window(unsigned int width, unsigned int height) :
     _window(nullptr)

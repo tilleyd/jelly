@@ -1,5 +1,5 @@
 #!/bin/env python
-# auto-generates src/glsl.cpp
+# auto-generates src/core/glsl.cpp
 # author: Duncan Tilley (duncan.tilley@gmail.com)
 
 import os
@@ -20,13 +20,13 @@ def into_string(filename):
 
 def create_consts(filename, const_name):
     code = into_string(filename)
-    return '\nconst char* geli::' + const_name + ' =\n' + code + ';\n'
+    return '\nconst char* geli::core::' + const_name + ' =\n' + code + ';\n'
 
 
-vertex = create_consts('src/glsl/vertex.glsl', 'SHADER_VERTEX')
-fragment = create_consts('src/glsl/fragment.glsl', 'SHADER_FRAGMENT')
-with open('src/glsl.cpp', 'w') as f:
-    f.write('#include <geli/glsl.h>\n')
+vertex = create_consts('src/core/glsl/vertex.glsl', 'SHADER_VERTEX')
+fragment = create_consts('src/core/glsl/fragment.glsl', 'SHADER_FRAGMENT')
+with open('src/core/glsl.cpp', 'w') as f:
+    f.write('#include <geli/core/glsl.h>\n')
     f.write('// auto-generated file, do not modify\n')
     f.write(vertex)
     f.write(fragment)

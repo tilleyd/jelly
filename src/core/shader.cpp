@@ -1,16 +1,23 @@
-#include <geli/shader.h>
+#include <geli/core/shader.h>
 
-#include <geli/glsl.h>
+#include <geli/core/glsl.h>
 
-using namespace geli;
+using namespace geli::core;
 
 Shader::Shader() :
     _shader(0)
 {
-    GLuint vert = compileShader(geli::SHADER_VERTEX, GL_VERTEX_SHADER);
-    GLuint frag = compileShader(geli::SHADER_FRAGMENT, GL_FRAGMENT_SHADER);
+    // create shader program
+    GLuint vert = compileShader(geli::core::SHADER_VERTEX,
+                                GL_VERTEX_SHADER);
+    GLuint frag = compileShader(geli::core::SHADER_FRAGMENT,
+                                GL_FRAGMENT_SHADER);
     _shader = linkProgram(vert, frag);
     glUseProgram(_shader);
+
+    // get shader uniforms
+    _vMatrixUniform = glGetUniformLocation(_shader, "u_VMatrix");
+    _pMatrixUniform = glGetUniformLocation(_shader, "u_PMatrix");
 }
 
 Shader::~Shader()
@@ -18,6 +25,16 @@ Shader::~Shader()
     if (_shader) {
         glDeleteProgram(_shader);
     }
+}
+
+void Shader::setVMatrix(const glm::mat4& vm)
+{
+    glUniformMatrix4fv(_vMatrixUniform, 1, GL_FALSE, &vm[0][0]);
+}
+
+void Shader::setPMatrix(const glm::mat4& pm)
+{
+    glUniformMatrix4fv(_pMatrixUniform, 1, GL_FALSE, &pm[0][0]);
 }
 
 GLuint Shader::linkProgram(GLuint vert, GLuint frag) const

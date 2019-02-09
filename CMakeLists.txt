@@ -9,19 +9,21 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #
 
 add_custom_command(
-    OUTPUT src/glsl.cpp
+    OUTPUT src/core/glsl.cpp
     COMMAND python ${PROJECT_SOURCE_DIR}/genglsl.py
     DEPENDS
-        src/glsl/vertex.glsl
-        src/glsl/fragment.glsl
+        src/core/glsl/vertex.glsl
+        src/core/glsl/fragment.glsl
 )
 add_library(geli STATIC
-    src/core.cpp
-    src/glsl.cpp
-    src/model.cpp
-    src/renderer.cpp
-    src/shader.cpp
-    src/window.cpp
+    src/sketch.cpp
+    src/core/glsl.cpp
+    src/core/model.cpp
+    src/core/renderer.cpp
+    src/core/shader.cpp
+    src/core/sketch_impl.cpp
+    src/core/view.cpp
+    src/core/window.cpp
 )
 set_target_properties(geli PROPERTIES
     VERSION ${PROJECT_VERSION}
@@ -48,6 +50,7 @@ install(DIRECTORY include/
 #
 
 add_executable(demo.out EXCLUDE_FROM_ALL
+    demo/demo.cpp
     demo/main.cpp
 )
 target_include_directories(demo.out PRIVATE include)

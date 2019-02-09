@@ -1,6 +1,6 @@
-#include <geli/model.h>
+#include <geli/core/model.h>
 
-using geli::Model;
+using geli::core::Model;
 
 Model::Model(const float vert[], unsigned int n, unsigned int mode) :
     _numVertices(n),

@@ -1,11 +1,14 @@
-#include <geli/core.h>
-#include <geli/window.h>
-#include <geli/shader.h>
-#include <geli/renderer.h>
+#include <geli/core/sketch_impl.h>
 
-using namespace geli;
+#include <geli/sketch.h>
+#include <geli/core/window.h>
+#include <geli/core/shader.h>
+#include <geli/core/renderer.h>
+#include <geli/core/view.h>
 
-Core::Core() :
+using namespace geli::core;
+
+SketchImpl::SketchImpl() :
     _executing(false)
 {
     // initialize SDL
@@ -19,20 +22,23 @@ Core::Core() :
                         SDL_GL_CONTEXT_PROFILE_CORE);
 }
 
-Core::~Core()
+SketchImpl::~SketchImpl()
 {
     SDL_Quit();
 }
 
-void Core::execute(Sketch& sketch, unsigned int width, unsigned int height)
+void SketchImpl::execute(Sketch& sketch,
+                         unsigned int width,
+                         unsigned int height)
 {
     // set up the environment
-    Window window(width, height);
-    Shader shader;
-    Renderer renderer;
+    _window.reset(new Window(width, height));
+    _shader.reset(new Shader);
+    _renderer.reset(new Renderer);
+    _view.reset(new View(*_shader));
 
     _executing = true;
-    sketch.init();
+    sketch.setup();
     while (_executing) {
 
         // poll SDL events
@@ -47,13 +53,18 @@ void Core::execute(Sketch& sketch, unsigned int width, unsigned int height)
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        sketch.draw(renderer);
-        window.swapBuffers();
+        sketch.draw();
+        _window->swapBuffers();
 
     }
 }
 
-void Core::stop()
+void SketchImpl::rect()
+{
+    _renderer->renderSquare();
+}
+
+void SketchImpl::stop()
 {
     _executing = false;
 }

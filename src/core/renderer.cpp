@@ -1,6 +1,6 @@
-#include <geli/renderer.h>
+#include <geli/core/renderer.h>
 
-using namespace geli;
+using namespace geli::core;
 
 Renderer::Renderer()
 {
