@@ -17,5 +17,11 @@ void Demo::draw()
     rect(x, y, 200, 100);
     color(0.886f, 0.322f, 0.58f);
     circle(x, -y, 150);
+
+    color(1.0f, 0.0f, 0.0f);
+    line(0, 0, 50, 0);
+    color(0.0f, 1.0f, 0.0f);
+    line(0, 0, 0, 50);
+
     counter = (counter + 5) % w;
 }

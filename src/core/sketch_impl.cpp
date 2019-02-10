@@ -88,7 +88,9 @@ void SketchImpl::ellipse(float x, float y, float w, float h)
 
 void SketchImpl::line(float x1, float y1, float x2, float y2)
 {
-    // TODO
+    _renderer->resetTransform();
+    _renderer->translateTransform(x1, y1, 0.0f);
+    _renderer->renderLine(x2 - x1, y2 - y1, 0.0f);
 }
 
 void SketchImpl::rect(float x, float y, float w, float h)

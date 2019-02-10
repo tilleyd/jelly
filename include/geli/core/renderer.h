@@ -4,6 +4,7 @@
 #include <geli/core/model.h>
 #include <memory>
 #include <glm/gtc/matrix_transform.hpp>
+#include <GL/glew.h>
 
 namespace geli
 {
@@ -40,6 +41,11 @@ namespace geli
                  *     The Shader used in the current environment.
                  **/
                 Renderer(Shader&);
+
+                /**
+                 * Clears resources used by the renderer.
+                 **/
+                ~Renderer();
 
                 /**
                  * Sets the model matrix to the identity matrix.
@@ -80,6 +86,12 @@ namespace geli
                  **/
                 void renderCircle() const;
 
+                /**
+                 * Draws a line from the origin to the given point with the
+                 * current transformation.
+                 **/
+                void renderLine(float x, float y, float z) const;
+
             private:
 
                 /**
@@ -92,10 +104,16 @@ namespace geli
                  **/
                 void initCircle();
 
+                /**
+                 * Creates the dynamic data buffer for lines.
+                 **/
+                void initLine();
+
                 Shader&                _shader;
                 glm::mat4              _mMatrix;
                 std::unique_ptr<Model> _square;
                 std::unique_ptr<Model> _circle;
+                GLuint                 _lineVbo, _lineVao;
 
         };
 
