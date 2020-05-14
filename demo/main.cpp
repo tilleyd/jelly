@@ -1,12 +1,16 @@
 #include <iostream>
-#include "demo.h"
+#include <geli/window.hpp>
 
 int main(int argc, char* argv[])
 {
     try {
-        Demo demo;
-        demo.execute(1280, 720);
-    } catch (const char* err) {
-        std::cout << "Error: " << err << std::endl;
+        geli::Window w("geli demo", geli::Vec2i(1280, 720));
+        w.on_draw([&](double p)
+        {
+            std::cout << p << std::endl;
+        });
+        w.create_windowed();
+    } catch (std::runtime_error e) {
+        std::cout << "Error: " << e.what() << std::endl;
     }
 }
