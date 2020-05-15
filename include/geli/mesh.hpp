@@ -43,8 +43,9 @@ class Mesh
         Mesh(const float vertices[],
              const float normals[],
              const float uvs[],
-             const unsigned int indices[],
              unsigned int n,
+             const unsigned int indices[],
+             unsigned int ni,
              unsigned int mode = GL_TRIANGLES);
 
         /**
@@ -53,11 +54,24 @@ class Mesh
         ~Mesh();
 
         /**
+         * Renders the current mesh using the active shader.
+         */
+        void render() const;
+
+        /**
          * Returns a handle to the OpenGL vertex buffer object.
          */
         unsigned int get_vbo() const
         {
             return _vbo;
+        }
+
+        /**
+         * Returns a handle to the OpenGL element buffer object.
+         */
+        unsigned int get_ebo() const
+        {
+            return _ebo;
         }
 
         /**
@@ -79,7 +93,9 @@ class Mesh
     private:
 
         unsigned int _numVertices;
+        unsigned int _numIndices;
         unsigned int _vbo;
+        unsigned int _ebo;
         unsigned int _vao;
         unsigned int _renderMode;
 

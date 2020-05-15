@@ -5,11 +5,14 @@ using namespace geli;
 Mesh::Mesh(const float vertices[],
            const float normals[],
            const float uvs[],
-           const unsigned int indices[],
            unsigned int n,
+           const unsigned int indices[],
+           unsigned int ni,
            unsigned int mode) :
     _numVertices(n),
+    _numIndices(ni),
     _vbo(0),
+    _ebo(0),
     _vao(0),
     _renderMode(mode)
 {
@@ -37,6 +40,11 @@ Mesh::Mesh(const float vertices[],
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
     glBufferData(GL_ARRAY_BUFFER, n * sizeof(float) * 8, buffer, GL_STATIC_DRAW);
 
+    // create the element buffer object and assign it
+    glGenBuffers(1, &_ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _numIndices * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+
     // configure vertex attributes
     // vertices attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -59,5 +67,17 @@ Mesh::~Mesh()
     }
     if (_vbo) {
         glDeleteBuffers(1, &_vbo);
+    }
+    if (_ebo) {
+        glDeleteBuffers(1, &_ebo);
+    }
+}
+
+void Mesh::render() const
+{
+    if (_vao) {
+        glBindVertexArray(_vao);
+        glDrawElements(_renderMode, _numIndices, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
     }
 }
