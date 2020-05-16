@@ -1,7 +1,10 @@
 #include <geli/window.hpp>
 
-#include <stdexcept>
 #include <chrono>
+#include <iostream>
+#include <stdexcept>
+
+#include <geli/shader.hpp>
 
 using namespace geli;
 
@@ -27,8 +30,11 @@ void Window::create_windowed()
                                          nullptr,
                                          nullptr);
         if (!_windowHandle) {
+            _end_glfw();
             throw std::runtime_error("could not create window");
         }
+        glfwMakeContextCurrent(_windowHandle);
+        _start_glew();
         _draw_loop();
     }
 }
@@ -42,8 +48,11 @@ void Window::create_fullscreen()
                                         glfwGetPrimaryMonitor(),
                                         nullptr);
         if (!_windowHandle) {
+            _end_glfw();
             throw std::runtime_error("could not create fullscreen window");
         }
+        glfwMakeContextCurrent(_windowHandle);
+        _start_glew();
         _draw_loop();
     }
 }
@@ -71,13 +80,33 @@ void Window::on_exit(exit_callback_t cb)
 void Window::_start_glfw()
 {
     if (!glfwInit()) {
-        throw std::runtime_error("could not initialize rendering context");
+        throw std::runtime_error("could not initialize glfw");
     }
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 }
 
 void Window::_end_glfw()
 {
-    glfwTerminate();
+    // glfwTerminate(); TODO uncomment, the version currently used causes a segfault
+}
+
+void Window::_start_glew()
+{
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glewExperimental = GL_TRUE;
+    if (glewInit() != GLEW_OK) {
+        throw std::runtime_error("could not initialize glew");
+    }
+
+    std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+    std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
+    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+
+    Shader::default_shader()->use();
 }
 
 void Window::_draw_loop()

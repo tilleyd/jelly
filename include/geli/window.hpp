@@ -4,6 +4,7 @@
 #include <functional>
 #include <string>
 
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include <geli/math.hpp>
@@ -144,6 +145,8 @@ private:
     void _start_glfw();
 
     void _end_glfw();
+
+    void _start_glew();
 
     void _draw_loop();
 

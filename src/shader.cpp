@@ -1,25 +1,19 @@
-#include <geli/core/shader.h>
+#include <geli/shader.hpp>
 
-#include <geli/core/glsl.h>
+#include <stdexcept>
 
-using namespace geli::core;
+#include <GL/glew.h>
 
-Shader::Shader() :
+using namespace geli;
+
+Shader::Shader(const std::string& vs, const std::string& fs) :
     _shader(0)
 {
-    // create shader program
-    GLuint vert = compileShader(geli::core::SHADER_VERTEX,
-                                GL_VERTEX_SHADER);
-    GLuint frag = compileShader(geli::core::SHADER_FRAGMENT,
-                                GL_FRAGMENT_SHADER);
-    _shader = linkProgram(vert, frag);
-    glUseProgram(_shader);
-
-    // get shader uniforms
-    _mMatrixUniform = glGetUniformLocation(_shader, "u_MMatrix");
-    _vMatrixUniform = glGetUniformLocation(_shader, "u_VMatrix");
-    _pMatrixUniform = glGetUniformLocation(_shader, "u_PMatrix");
-    _colorUniform = glGetUniformLocation(_shader, "u_Color");
+    // compile the shaders
+    GLuint vert = _compile_shader(vs.c_str(), GL_VERTEX_SHADER);
+    GLuint frag = _compile_shader(fs.c_str(), GL_FRAGMENT_SHADER);
+    // and link
+    _shader = _link_program(vert, frag);
 }
 
 Shader::~Shader()
@@ -29,48 +23,34 @@ Shader::~Shader()
     }
 }
 
-void Shader::setMMatrix(const glm::mat4& mm)
+void Shader::use() const
 {
-    glUniformMatrix4fv(_mMatrixUniform, 1, GL_FALSE, &mm[0][0]);
+    glUseProgram(_shader);
 }
 
-void Shader::setVMatrix(const glm::mat4& vm)
-{
-    glUniformMatrix4fv(_vMatrixUniform, 1, GL_FALSE, &vm[0][0]);
-}
-
-void Shader::setPMatrix(const glm::mat4& pm)
-{
-    glUniformMatrix4fv(_pMatrixUniform, 1, GL_FALSE, &pm[0][0]);
-}
-
-void Shader::setColor(float r, float g, float b, float a)
-{
-    glm::vec4 color(r, g, b, a);
-    glUniform4fv(_colorUniform, 1, &color[0]);
-}
-
-GLuint Shader::linkProgram(GLuint vert, GLuint frag) const
+unsigned int Shader::_link_program(unsigned int vert, unsigned int frag)
 {
     GLuint program = glCreateProgram();
-    // link the program
+    // link the program and get the result
     glAttachShader(program, vert);
     glAttachShader(program, frag);
     glLinkProgram(program);
-    // check the results
     GLint result = GL_FALSE;
     glGetProgramiv(program, GL_LINK_STATUS, &result);
-    if (result == GL_FALSE) {
-        throw "failed to link shaders";
-    }
+
+    // clean up the shaders before possibly throwing an exception
     glDetachShader(program, vert);
     glDetachShader(program, frag);
     glDeleteShader(vert);
     glDeleteShader(frag);
+
+    if (result == GL_FALSE) {
+        throw std::runtime_error("failed to link vertex and fragment shaders");
+    }
     return program;
 }
 
-GLuint Shader::compileShader(const char* glsl, GLenum type) const
+unsigned int Shader::_compile_shader(const char* glsl, unsigned int type)
 {
     GLuint shader = glCreateShader(type);
     // compile the shader
@@ -80,7 +60,8 @@ GLuint Shader::compileShader(const char* glsl, GLenum type) const
     GLint result = GL_FALSE;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
     if (result == GL_FALSE) {
-        throw "failed to compile shader";
+        glDeleteShader(shader);
+        throw std::runtime_error("failed to compile shader");
     }
     return shader;
 }

@@ -10,9 +10,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_library(geli STATIC
     src/mesh.cpp
-    # src/renderer.cpp
-    # src/shader.cpp
+    src/shader.cpp
     src/window.cpp
+
+    src/predef/shader_predef.cpp
+    src/predef/mesh_predef.cpp
 )
 set_target_properties(geli PROPERTIES
     VERSION ${PROJECT_VERSION}

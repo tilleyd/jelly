@@ -1,130 +1,103 @@
-#ifndef _GELI_CORE_SHADER_H_
-#define _GELI_CORE_SHADER_H_
+#ifndef _GELI_SHADER_HPP_
+#define _GELI_SHADER_HPP_
 
-#include <GL/glew.h>
-#include <glm/gtc/matrix_transform.hpp>
+#include <string>
+#include <map>
+#include <memory>
 
 namespace geli
 {
 
-    namespace core
+/**
+ * Allows creation and use of a GLSL shader program.
+ *
+ * \warn
+ *     The window must be created before attempting to create a Shader.
+ */
+class Shader
+{
+
+public:
+
+    Shader() = delete;
+    Shader(const Shader&) = delete;
+    Shader& operator=(const Shader&) = delete;
+
+    /**
+     * Returns the default shader.
+     */
+    static std::shared_ptr<Shader> default_shader();
+
+    /**
+     * Creates a shader from the given GLSL vertex and fragment shader code.
+     *
+     * \param vs
+     *     The complete vertex shader code.
+     * \param fs
+     *     The complete fragment shader code.
+     *
+     * \throw std::runtime_error if the shader compilation failed.
+     */
+    Shader(const std::string& vs, const std::string& fs);
+
+    /**
+     * Clears all resources used by the shader.
+     */
+    ~Shader();
+
+    /**
+     * Sets the shader as the active shader.
+     */
+    void use() const;
+
+    /**
+     * Returns a handle to the OpenGL shader program.
+     */
+    unsigned int get_handle() const
     {
+        return _shader;
+    }
 
-        /**
-         * Allows interaction with the OpenGL shader program.
-         *
-         * The shaders are compiled and linked, with a handle to the linked
-         * program being kept by the object. The shader object also allows
-         * interaction with the uniforms of the shader.
-         *
-         * \warn
-         *     The Window must be created before attempting to create the
-         *     Shader.
-         *
-         * \author
-         *     Duncan Tilley
-         **/
-        class Shader
-        {
+private:
 
-            public:
+    /**
+     * Links the vertex and fragment shaders.
+     *
+     * \param v
+     *     A handle to the compiled vertex shader.
+     * \param f
+     *     A handle to the compiled fragment shader.
+     *
+     * \return
+     *     A handle to the linked shader program.
+     *
+     * \throws
+     *     std::runtime_error if linking failed.
+     */
+    static unsigned int _link_program(unsigned int vert, unsigned int frag);
 
-                Shader(const Shader&) = delete;
-                Shader& operator=(const Shader&) = delete;
+    /**
+     * Compiles the given GLSL code as the specified type of shader.
+     *
+     * \param glsl
+     *     Shader source code.
+     * \param type
+     *     The shader type constant.
+     *
+     * \return
+     *     A handle to the compiled shader.
+     *
+     * \throws
+     *     std::runtime_error if compilation failed.
+     */
+    static unsigned int _compile_shader(const char* glsl, unsigned int type);
 
-                /**
-                 * Creates the shaders used for rendering and gets the uniform
-                 * handles.
-                 **/
-                Shader();
+    unsigned int                        _shader;
+    std::map<std::string, unsigned int> _uniformCache;
 
-                /**
-                 * Clears all resources used by the renderer.
-                 **/
-                ~Shader();
+    static std::shared_ptr<Shader> _defaultShader;
 
-                /**
-                 * Sets the u_MMatrix shader uniform.
-                 *
-                 * \param mm
-                 *     The mat4 representing the model matrix.
-                 **/
-                void setMMatrix(const glm::mat4& mm);
-
-                /**
-                 * Sets the u_VMatrix shader uniform.
-                 *
-                 * \param vm
-                 *     The mat4 representing the view matrix.
-                 **/
-                void setVMatrix(const glm::mat4& vm);
-
-                /**
-                 * Sets the u_PMatrix shader uniform.
-                 *
-                 * \param pm
-                 *     The mat4 representing the projection matrix.
-                 **/
-                void setPMatrix(const glm::mat4& pm);
-
-                /**
-                 * Sets the u_Color shader uniform.
-                 *
-                 * \param r
-                 *     Red value in range [0.0, 1.0].
-                 * \param g
-                 *     Green value in range [0.0, 1.0].
-                 * \param b
-                 *     Blue value in range [0.0, 1.0].
-                 * \param a
-                 *     Alpha value in range [0.0, 1.0].
-                 **/
-                void setColor(float r, float g, float b, float a);
-
-            private:
-
-                /**
-                 * Links the vertex and fragment shaders.
-                 *
-                 * \param vert
-                 *     A handle to the compiled OpenGL vertex shader.
-                 * \param frag
-                 *     A handle to the compiled OpenGL fragment shader.
-                 *
-                 * \return
-                 *     A handle to the linked OpenGL shader program.
-                 *
-                 * \throws
-                 *     `const char*` when the linking fails.
-                 **/
-                GLuint linkProgram(GLuint vert, GLuint frag) const;
-
-                /**
-                 * Compiles the given GLSL code as the specified type of shader.
-                 *
-                 * \param glsl
-                 *     Shader source code.
-                 * \param type
-                 *     The shader type constant.
-                 *
-                 * \return
-                 *     A handle to the compiled OpenGL shader.
-                 *
-                 * \throws
-                 *     `const char*` when the compilation fails.
-                 **/
-                GLuint compileShader(const char* glsl, GLenum type) const;
-
-                GLuint _shader;
-
-                GLuint _mMatrixUniform;
-                GLuint _vMatrixUniform;
-                GLuint _pMatrixUniform;
-                GLuint _colorUniform;
-
-        };
-
-    };
+};
 
 };
 
