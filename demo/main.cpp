@@ -1,4 +1,5 @@
 #include <iostream>
+#include <geli/mesh.hpp>
 #include <geli/window.hpp>
 
 int main(int argc, char* argv[])
@@ -7,7 +8,9 @@ int main(int argc, char* argv[])
         geli::Window w("geli demo", geli::Vec2i(1280, 720));
         w.on_draw([&](double p)
         {
-            std::cout << p << std::endl;
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClearColor(0.15f, 0.15f, 0.15f, 1.f);
+            geli::Mesh::cube_mesh()->render();
         });
         w.create_windowed();
     } catch (std::runtime_error e) {

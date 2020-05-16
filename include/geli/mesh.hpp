@@ -1,6 +1,8 @@
 #ifndef _GELI_MESH_HPP_
 #define _GELI_MESH_HPP_
 
+#include <memory>
+
 #include <GL/glew.h>
 
 namespace geli
@@ -18,6 +20,16 @@ public:
     Mesh() = delete;
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
+
+    /**
+     * Returns the predefined square mesh.
+     */
+    static std::shared_ptr<Mesh> square_mesh();
+
+    /**
+     * Returns the predefined cube mesh.
+     */
+    static std::shared_ptr<Mesh> cube_mesh();
 
     /**
      * Creates a mesh from the given buffer arrays.
@@ -98,6 +110,9 @@ private:
     unsigned int _ebo;
     unsigned int _vao;
     unsigned int _renderMode;
+
+    static std::shared_ptr<Mesh> _squareMesh;
+    static std::shared_ptr<Mesh> _cubeMesh;
 
 };
 
