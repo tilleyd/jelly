@@ -12,24 +12,33 @@
 namespace geli
 {
 
+class Window;
+
+/**
+ * A window create callback function.
+ */
+typedef std::function<void(Window&)> create_callback_t;
+
 /**
  * A draw loop callback function.
  *
+ * \param Window
+ *     The window that triggered the event.
  * \param double
  *     The time passed since the previous draw call.
  */
-typedef std::function<void(double)> draw_callback_t;
+typedef std::function<void(Window&, double)> draw_callback_t;
 
 /**
  * A window close callback function. Should return true to allow the window
  * to exit, or false to override and block the close.
  */
-typedef std::function<bool()> close_callback_t;
+typedef std::function<bool(Window&)> close_callback_t;
 
 /**
  * A window exit callback function.
  */
-typedef std::function<void()> exit_callback_t;
+typedef std::function<void(Window&)> exit_callback_t;
 
 /**
  * Defines a window used for the rendering environment.
@@ -81,6 +90,11 @@ public:
      * Marks the window to exit after completion of the current draw step.
      */
     void exit();
+
+    /**
+     * Sets a callback function to be called when the window is created.
+     */
+    void on_create(create_callback_t);
 
     /**
      * Sets a callback function to be called at each draw step.
@@ -138,9 +152,10 @@ private:
 
     bool _willExit, _isActive;
 
-    draw_callback_t  _draw_callback;
-    close_callback_t _close_callback;
-    exit_callback_t  _exit_callback;
+    create_callback_t _createCallback;
+    draw_callback_t   _drawCallback;
+    close_callback_t  _closeCallback;
+    exit_callback_t   _exitCallback;
 
     void _start_glfw();
 

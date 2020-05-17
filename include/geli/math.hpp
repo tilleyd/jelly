@@ -3,5 +3,6 @@
 
 #include <geli/math/vec2.hpp>
 #include <geli/math/vec3.hpp>
+#include <geli/math/mat4.hpp>
 
 #endif

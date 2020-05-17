@@ -1,20 +1,20 @@
 #ifndef _DEMO_H_
 #define _DEMO_H_
 
-#include <geli/sketch.h>
+#include <geli/window.hpp>
 
-class Demo : public geli::Sketch
+class Demo
 {
 
-    public:
+public:
 
-        void setup();
+    void create(geli::Window&);
 
-        void draw();
+    void draw(geli::Window&, double p);
 
-    private:
+private:
 
-        int counter;
+    int _counter;
 
 };
 

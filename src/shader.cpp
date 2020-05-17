@@ -28,6 +28,38 @@ void Shader::use() const
     glUseProgram(_shader);
 }
 
+unsigned int Shader::get_uniform_handle(const std::string& u)
+{
+    try {
+        return _uniformCache.at(u);
+    } catch (...) {
+        // not cached yet, find it
+        unsigned int h = glGetUniformLocation(_shader, u.c_str());
+        _uniformCache[u] = h;
+        return h;
+    }
+}
+
+void Shader::set_uniform(const std::string& u, const Vec2f& v)
+{
+    set_uniform(get_uniform_handle(u), v);
+}
+
+void Shader::set_uniform(unsigned int u, const Vec2f& v)
+{
+    glUniform2fv(u, 1, v.data());
+}
+
+void Shader::set_uniform(const std::string& u, const Vec3f& v)
+{
+    set_uniform(get_uniform_handle(u), v);
+}
+
+void Shader::set_uniform(unsigned int u, const Vec3f& v)
+{
+    glUniform3fv(u, 1, v.data());
+}
+
 unsigned int Shader::_link_program(unsigned int vert, unsigned int frag)
 {
     GLuint program = glCreateProgram();

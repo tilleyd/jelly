@@ -5,6 +5,8 @@
 #include <map>
 #include <memory>
 
+#include <geli/math.hpp>
+
 namespace geli
 {
 
@@ -49,6 +51,22 @@ public:
      * Sets the shader as the active shader.
      */
     void use() const;
+
+    /**
+     * Returns the handle to the uniform.
+     *
+     * \param u
+     *     The name of the shader uniform.
+     */
+    unsigned int get_uniform_handle(const std::string& u);
+
+    void set_uniform(const std::string& u, const Vec2f&);
+
+    void set_uniform(unsigned int u, const Vec2f&);
+
+    void set_uniform(const std::string& u, const Vec3f&);
+
+    void set_uniform(unsigned int u, const Vec3f&);
 
     /**
      * Returns a handle to the OpenGL shader program.

@@ -1,16 +1,21 @@
 #include <iostream>
-#include <geli/mesh.hpp>
+
 #include <geli/window.hpp>
+
+#include "demo.h"
 
 int main(int argc, char* argv[])
 {
     try {
         geli::Window w("geli demo", geli::Vec2i(1280, 720));
-        w.on_draw([&](double p)
+        Demo d;
+        w.on_create([&d](geli::Window& w)
         {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glClearColor(0.15f, 0.15f, 0.15f, 1.f);
-            geli::Mesh::cube_mesh()->render();
+            d.create(w);
+        });
+        w.on_draw([&d](geli::Window& w, double p)
+        {
+            d.draw(w, p);
         });
         w.create_windowed();
     } catch (std::runtime_error e) {

@@ -35,6 +35,9 @@ void Window::create_windowed()
         }
         glfwMakeContextCurrent(_windowHandle);
         _start_glew();
+        if (_createCallback) {
+            _createCallback(*this);
+        }
         _draw_loop();
     }
 }
@@ -53,6 +56,9 @@ void Window::create_fullscreen()
         }
         glfwMakeContextCurrent(_windowHandle);
         _start_glew();
+        if (_createCallback) {
+            _createCallback(*this);
+        }
         _draw_loop();
     }
 }
@@ -62,19 +68,24 @@ void Window::exit()
     _willExit = true;
 }
 
+void Window::on_create(create_callback_t cb)
+{
+    _createCallback = cb;
+}
+
 void Window::on_draw(draw_callback_t cb)
 {
-    _draw_callback = cb;
+    _drawCallback = cb;
 }
 
 void Window::on_close(close_callback_t cb)
 {
-    _close_callback = cb;
+    _closeCallback = cb;
 }
 
 void Window::on_exit(exit_callback_t cb)
 {
-    _exit_callback = cb;
+    _exitCallback = cb;
 }
 
 void Window::_start_glfw()
@@ -118,8 +129,8 @@ void Window::_draw_loop()
         auto point = std::chrono::high_resolution_clock::now();
         double period = std::chrono::duration_cast<std::chrono::nanoseconds>(point - epoch).count() * 1.0e-9;
         epoch = point;
-        if (_draw_callback) {
-            _draw_callback(period);
+        if (_drawCallback) {
+            _drawCallback(*this, period);
         }
         glfwSwapBuffers(_windowHandle);
 
@@ -128,7 +139,7 @@ void Window::_draw_loop()
 
         // check if the user or system attempted to close
         if (glfwWindowShouldClose(_windowHandle)) {
-            if (!_close_callback || _close_callback()) {
+            if (!_closeCallback || _closeCallback(*this)) {
                 exit();
             } else {
                 // closing was overridden by the callback
@@ -143,8 +154,8 @@ void Window::_draw_loop()
 void Window::_exit()
 {
     if (_windowHandle) {
-        if (_exit_callback) {
-            _exit_callback();
+        if (_exitCallback) {
+            _exitCallback(*this);
         }
         glfwDestroyWindow(_windowHandle);
         _windowHandle = nullptr;

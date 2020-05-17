@@ -14,10 +14,15 @@ public:
 
     Vec2(T x, T y) : _data{x, y} {};
 
-    T& x() { return _data[0]; }
-    T& y() { return _data[1]; }
+    T* data() { return _data; }
+    const T* data() const { return _data; }
 
-    Vec2<T> yx() { return Vec2(y(), x()); }
+    T& x() { return _data[0]; }
+    T x() const { return _data[0]; }
+    T& y() { return _data[1]; }
+    T y() const { return _data[1]; }
+
+    Vec2<T> yx() const { return Vec2(y(), x()); }
 
 private:
 

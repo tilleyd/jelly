@@ -2,26 +2,22 @@
 
 #include <cmath>
 
-void Demo::setup()
+#include <geli/mesh.hpp>
+#include <geli/shader.hpp>
+
+void Demo::create(geli::Window&)
 {
-    counter = 0;
+    _counter = 0;
 }
 
-void Demo::draw()
+void Demo::draw(geli::Window&, double p)
 {
-    background(0.184f, 0.204f, 0.247f);
-    int w = width() + 200;
-    int x = counter - (w / 2);
-    int y = sin((x / (double)w) * 2 * M_PI) * 200;
-    color(0.322f, 0.58f, 0.886f);
-    rect(x, y, 200, 100);
-    color(0.886f, 0.322f, 0.58f);
-    circle(x, -y, 150);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(0.15f, 0.15f, 0.15f, 1.f);
+    geli::Mesh::cube_mesh()->render();
 
-    color(1.0f, 0.0f, 0.0f);
-    line(0, 0, 50, 0);
-    color(0.0f, 1.0f, 0.0f);
-    line(0, 0, 0, 50);
+    double f = sin(_counter * M_PI / 180.0) + 1.0 * 0.5;
+    geli::Shader::default_shader()->set_uniform("u_Color", geli::Vec3f(f, 1.0f, 1.0f));
 
-    counter = (counter + 5) % w;
+    _counter = (_counter + 1) % 360;
 }
