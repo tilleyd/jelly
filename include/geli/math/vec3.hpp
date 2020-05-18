@@ -1,6 +1,8 @@
 #ifndef _GELI_MATH_VEC3_HPP_
 #define _GELI_MATH_VEC3_HPP_
 
+#include <cmath>
+
 #include <geli/math/vec2.hpp>
 
 namespace geli
@@ -52,6 +54,102 @@ private:
 typedef Vec3<double> Vec3d;
 typedef Vec3<float> Vec3f;
 typedef Vec3<int> Vec3i;
+
+/**
+ * Vector-vector addition.
+ */
+template <typename T>
+Vec3<T> operator+(const Vec3<T>& a, const Vec3<T>& b)
+{
+    return Vec3<T>(a.x() + b.x(), a.y() + b.y(), a.z() + b.z());
+}
+
+/**
+ * Vector-vector subtraction.
+ */
+template <typename T>
+Vec3<T> operator-(const Vec3<T>& a, const Vec3<T>& b)
+{
+    return Vec3<T>(a.x() - b.x(), a.y() - b.y(), a.z() - b.z());
+}
+
+/**
+ * Vector negation, equivalent to -1 * v.
+ */
+template <typename T>
+Vec3<T> operator-(const Vec3<T>& v)
+{
+    return Vec3<T>(-v.x(), -v.y(), -v.z());
+}
+
+/**
+ * Scalar-vector multiplication.
+ */
+template <typename T>
+Vec3<T> operator*(T s, const Vec3<T>& v)
+{
+    return Vec3<T>(s*v.x(), s*v.y(), s*v.z());
+}
+
+/**
+ * Vector-scalar multiplication.
+ */
+template <typename T>
+Vec3<T> operator*(const Vec3<T>& v, T s)
+{
+    return Vec3<T>(v.x()*s, v.y()*s, v.z()*s);
+}
+
+/**
+ * Vector distance, ||b - a||.
+ */
+template <typename T>
+float distance(const Vec3<T>& a, const Vec3<T>& b)
+{
+    return magnitude(b - a);
+}
+
+/**
+ * Vector magnitude, ||v||.
+ */
+template <typename T>
+float magnitude(const Vec3<T>& v)
+{
+    return sqrtf(static_cast<float>(v.x()*v.x() + v.y()*v.y() + v.z()*v.z()));
+}
+
+/**
+ * Dot product, a dot b.
+ */
+template <typename T>
+Vec3<T> dot(const Vec3<T>& a, const Vec3<T>& b)
+{
+    return a.x()*b.x() + a.y()*b.y() + a.z()*b.z();
+}
+
+/**
+ * Normalized vector, v/||v||.
+ *
+ * \warn The magnitude is not checked to be non-zero.
+ */
+template <typename T>
+Vec3<T> normalize(const Vec3<T>& v)
+{
+    return (1.0f/magnitude(v)) * v;
+}
+
+/**
+ * Cross product, a cross b.
+ */
+template <typename T>
+Vec3<T> cross(const Vec3<T>& a, const Vec3<T>& b)
+{
+    return Vec3<T>(
+        a.y()*b.z() - a.z()*b.y(),
+        a.z()*b.x() - a.x()*b.z(),
+        a.x()*b.y() - a.y()*b.x()
+    );
+}
 
 };
 

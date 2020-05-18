@@ -60,6 +60,16 @@ void Shader::set_uniform(unsigned int u, const Vec3f& v)
     glUniform3fv(u, 1, v.data());
 }
 
+void Shader::set_uniform(const std::string& u, const Mat4f& m)
+{
+    set_uniform(get_uniform_handle(u), m);
+}
+
+void Shader::set_uniform(unsigned int u, const Mat4f& m)
+{
+    glUniformMatrix4fv(u, 1, GL_FALSE, m.data());
+}
+
 unsigned int Shader::_link_program(unsigned int vert, unsigned int frag)
 {
     GLuint program = glCreateProgram();

@@ -11,8 +11,9 @@ using namespace geli;
 namespace
 {
     static const char* VERTEX_SHADER = R"(#version 330
-        uniform mat4 u_VP;
         uniform mat4 u_M;
+        uniform mat4 u_V;
+        uniform mat4 u_P;
         uniform vec3 u_Color;
 
         in vec3 v_Position;
@@ -23,9 +24,7 @@ namespace
 
         void main()
         {
-            // gl_Position = u_VP * u_M * vec4(v_Position, 1.0);
-
-            gl_Position = vec4(v_Position, 1.0);
+            gl_Position = u_P * u_V * u_M * vec4(v_Position, 1.0);
             o_Color = vec4(u_Color, 1.0);
         }
     )";
