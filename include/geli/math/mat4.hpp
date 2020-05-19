@@ -65,6 +65,38 @@ public:
     static Mat4<T> translation(const Vec3<T>& t);
 
     /**
+     * Creates an x rotation matrix.
+     *
+     * \param a
+     *     The x rotation angle in radians.
+     */
+    static Mat4<T> x_rotation(float a);
+
+    /**
+     * Creates a y rotation matrix.
+     *
+     * \param a
+     *     The y rotation angle in radians.
+     */
+    static Mat4<T> y_rotation(float a);
+
+    /**
+     * Creates a z rotation matrix.
+     *
+     * \param a
+     *     The z rotation angle in radians.
+     */
+    static Mat4<T> z_rotation(float a);
+
+    /**
+     * Creates a scaling matrix.
+     *
+     * \param s
+     *     The scale to apply per axis.
+     */
+    static Mat4<T> scale(Vec3<T> s);
+
+    /**
      * Creates a zero Mat4.
      */
     Mat4() : _data{} {}
@@ -173,10 +205,64 @@ template <typename T>
 Mat4<T> Mat4<T>::translation(const Vec3<T>& t)
 {
     T m[] = {
-        1,     0,     0,     0,
-        0,     1,     0,     0,
-        0,     0,     1,     0,
-        t.x(), t.y(), t.z(), 1
+        1.0f,  0.0f,  0.0f,  0.0f,
+        0.0f,  1.0f,  0.0f,  0.0f,
+        0.0f,  0.0f,  1.0f,  0.0f,
+        t.x(), t.y(), t.z(), 1.0f
+    };
+    return Mat4<T>(m);
+}
+
+template <typename T>
+Mat4<T> Mat4<T>::x_rotation(float a)
+{
+    float cs = cosf(a);
+    float sn = sinf(a);
+    T m[] = {
+        1.0f,  0.0f, 0.0f, 0.0f,
+        0.0f,  cs,   sn,   0.0f,
+        0.0f, -sn,   cs,   0.0f,
+        0.0f,  0.0f, 0.0f, 1.0f
+    };
+    return Mat4<T>(m);
+}
+
+template <typename T>
+Mat4<T> Mat4<T>::y_rotation(float a)
+{
+    float cs = cosf(a);
+    float sn = sinf(a);
+    T m[] = {
+        cs,   0.0f, -sn,   0.0f,
+        0.0f, 1.0f,  0.0f, 0.0f,
+        sn,   0.0f,  cs,   0.0f,
+        0.0f, 0.0f,  0.0f, 1.0f
+    };
+    return Mat4<T>(m);
+}
+
+template <typename T>
+Mat4<T> Mat4<T>::z_rotation(float a)
+{
+    float cs = cosf(a);
+    float sn = sinf(a);
+    T m[] = {
+         cs,   sn,   0.0f, 0.0f,
+        -sn,   cs,   0.0f, 0.0f,
+         0.0f, 0.0f, 1.0f, 0.0f,
+         0.0f, 0.0f, 0.0f, 1.0f
+    };
+    return Mat4<T>(m);
+}
+
+template <typename T>
+Mat4<T> Mat4<T>::scale(Vec3<T> s)
+{
+    T m[] = {
+        s.x(), 0.0f,  0.0f,  0.0f,
+        0.0f,  s.y(), 0.0f,  0.0f,
+        0.0f,  0.0f,  s.z(), 0.0f,
+        0.0f,  0.0f,  0.0f,  1.0f
     };
     return Mat4<T>(m);
 }

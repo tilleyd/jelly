@@ -6,35 +6,43 @@
 #include <geli/mesh.hpp>
 #include <geli/shader.hpp>
 
-void Demo::create(geli::Window& w)
+using namespace geli;
+
+void Demo::create(Window& w)
 {
     _counter = 0;
 
     _camera.attach_to(w);
-    geli::Shader::default_shader()->set_uniform("u_P", geli::Mat4f::perspective(DEG_TO_RAD(90.0f), 1280.0f/720.0f, 0.1f, 100.0f));
+    Shader::default_shader()->set_uniform("u_P", Mat4f::perspective(DEG_TO_RAD(90.0f), 1280.0f/720.0f, 0.1f, 100.0f));
 }
 
-void Demo::draw(geli::Window& w, double p)
+void Demo::draw(Window& w, double p)
 {
-    w.clear(geli::Vec3f(0.1f));
+    w.clear(Vec3f(0.1f));
 
     // set the view matrix to the camera
-    geli::Shader::default_shader()->set_uniform("u_V", _camera.get_view_matrix());
+    Shader::default_shader()->set_uniform("u_V", _camera.get_view_matrix());
 
-    // draw a moving cube
-    double sn = sin(_counter * M_PI / 180.0);
-    double cs = cos(_counter * M_PI / 180.0);
-    geli::Shader::default_shader()->set_uniform("u_Color", geli::Vec3f(0.0f, (sn + 1.0f) * 0.5f, (cs + 1.0f) * 0.5f));
-    geli::Shader::default_shader()->set_uniform("u_M", geli::Mat4f::translation(geli::Vec3f(sn, cs, 0.0f)));
-    geli::Mesh::cube_mesh()->render();
+    // draw a flat rectangle
+    Shader::default_shader()->set_uniform("u_Color", Vec3f(0.95f, 0.2f, 0.2f));
+    Shader::default_shader()->set_uniform("u_M", Mat4f::translation(Vec3f(0.0f, -1.05f, 0.0f)) * Mat4f::scale(Vec3f(2.0f, 0.1f, 2.0f)));
+    Mesh::cube_mesh()->render();
+
+    // draw a floating cube
+    double x = sin(DEG_TO_RAD(_counter * 2.0));
+    double y = sin(DEG_TO_RAD(_counter));
+    double z = cos(DEG_TO_RAD(_counter * 2.0));
+    Shader::default_shader()->set_uniform("u_Color", Vec3f(0.8f, 0.8f, 0.8f));
+    Shader::default_shader()->set_uniform("u_M", Mat4f::translation(Vec3f(x, y + 0.5f, z)));
+    Mesh::cube_mesh()->render();
 
     _counter = (_counter + 1) % 360;
 }
 
-void Demo::on_key(geli::Window&, int key, int, int act, int)
+void Demo::on_key(Window&, int key, int, int act, int)
 {
 }
 
-void Demo::on_mouse_move(geli::Window&, const geli::Vec2d& p, const geli::Vec2d& r)
+void Demo::on_mouse_move(Window&, const Vec2d& p, const Vec2d& r)
 {
 }
