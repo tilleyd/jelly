@@ -16,6 +16,8 @@ public:
 
     Vec3() : _data{0, 0} {};
 
+    Vec3(T v) : _data{v, v, v} {};
+
     Vec3(T x, T y, T z) : _data{x, y, z} {};
 
     Vec3(const Vec2<T> xy, T z) : _data{xy.x(), xy.y(), z} {}

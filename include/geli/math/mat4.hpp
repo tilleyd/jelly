@@ -16,7 +16,7 @@ public:
      * Creates a perspective projection matrix.
      *
      * \param fov
-     *     The field of view of the projection.
+     *     The field of view of the projection in radians.
      * \param ratio
      *     The aspect ratio of the viewport (width / height).
      * \param near
@@ -122,7 +122,7 @@ typedef Mat4<float> Mat4f;
 template <typename T>
 Mat4<T> Mat4<T>::perspective(float fov, float ratio, float n, float f)
 {
-    float t = n * tanf((fov * M_PI / 180.0f) * 0.5f);
+    float t = n * tanf(fov * 0.5f);
     float b = -t;
     float r = t * ratio;
     float l = -r;
@@ -148,7 +148,7 @@ Mat4<T> Mat4<T>::orthographic(float l, float r, float b, float t, float n, float
 }
 
 template <typename T>
-Mat4<T> look_at(const Vec3<T>& origin, const Vec3<T>& target, const Vec3<T>& up)
+Mat4<T> Mat4<T>::look_at(const Vec3<T>& origin, const Vec3<T>& target, const Vec3<T>& up)
 {
     Vec3<T> dir = normalize(origin - target);
     Vec3<T> right = normalize(cross(up, dir));

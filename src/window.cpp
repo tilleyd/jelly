@@ -12,6 +12,8 @@ Window::Window(const std::string& title, const Vec2i& size) :
         _windowHandle(nullptr),
         _title(title),
         _size(size),
+        _mousePos(0.0, 0.0),
+        _mouseButton(-1),
         _willExit(false),
         _isActive(false)
 {}
@@ -34,7 +36,9 @@ void Window::create_windowed()
             throw std::runtime_error("could not create window");
         }
         glfwMakeContextCurrent(_windowHandle);
+        glfwSetWindowUserPointer(_windowHandle, this);
         _start_glew();
+        _setup_events();
         if (_createCallback) {
             _createCallback(*this);
         }
@@ -55,6 +59,7 @@ void Window::create_fullscreen()
             throw std::runtime_error("could not create fullscreen window");
         }
         glfwMakeContextCurrent(_windowHandle);
+        glfwSetWindowUserPointer(_windowHandle, this);
         _start_glew();
         if (_createCallback) {
             _createCallback(*this);
@@ -68,24 +73,65 @@ void Window::exit()
     _willExit = true;
 }
 
-void Window::on_create(create_callback_t cb)
+void Window::set_on_create(create_callback_t cb)
 {
     _createCallback = cb;
 }
 
-void Window::on_draw(draw_callback_t cb)
+void Window::set_on_draw(draw_callback_t cb)
 {
     _drawCallback = cb;
 }
 
-void Window::on_close(close_callback_t cb)
+void Window::set_on_close(close_callback_t cb)
 {
     _closeCallback = cb;
 }
 
-void Window::on_exit(exit_callback_t cb)
+void Window::set_on_exit(exit_callback_t cb)
 {
     _exitCallback = cb;
+}
+
+void Window::add_on_key(key_callback_t cb)
+{
+    _keyCallbacks.push_back(cb);
+}
+
+void Window::add_on_mouse_button(mouse_button_callback_t cb)
+{
+    _mouseButtonCallbacks.push_back(cb);
+}
+
+void Window::add_on_mouse_move(mouse_move_callback_t cb)
+{
+    _mouseMoveCallbacks.push_back(cb);
+}
+
+void Window::add_on_mouse_drag(mouse_drag_callback_t cb)
+{
+    _mouseDragCallbacks.push_back(cb);
+}
+
+void Window::clear(const Vec3f& v)
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(v.x(), v.y(), v.z(), 1.f);
+}
+
+void Window::capture_mouse()
+{
+    glfwSetInputMode(_windowHandle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+void Window::hide_mouse()
+{
+    glfwSetInputMode(_windowHandle, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+}
+
+void Window::restore_mouse()
+{
+    glfwSetInputMode(_windowHandle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 void Window::_start_glfw()
@@ -118,6 +164,13 @@ void Window::_start_glew()
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 
     Shader::default_shader()->use();
+}
+
+void Window::_setup_events()
+{
+    glfwSetKeyCallback(_windowHandle, _glfw_key_callback);
+    glfwSetMouseButtonCallback(_windowHandle, _glfw_mouse_button_callback);
+    glfwSetCursorPosCallback(_windowHandle, _glfw_mouse_move_callback);
 }
 
 void Window::_draw_loop()
@@ -160,5 +213,44 @@ void Window::_exit()
         glfwDestroyWindow(_windowHandle);
         _windowHandle = nullptr;
         _end_glfw();
+    }
+}
+
+/*static*/ void Window::_glfw_key_callback(GLFWwindow* wh, int key, int sc, int act, int mods)
+{
+    Window* w = static_cast<Window*>(glfwGetWindowUserPointer(wh));
+    for (key_callback_t& cb : w->_keyCallbacks) {
+        cb(*w, key, sc, act, mods);
+    }
+}
+
+/*static*/ void Window::_glfw_mouse_button_callback(GLFWwindow* wh, int btn, int act, int mods)
+{
+    Window* w = static_cast<Window*>(glfwGetWindowUserPointer(wh));
+    for (mouse_button_callback_t& cb : w->_mouseButtonCallbacks) {
+        cb(*w, btn, act, mods);
+    }
+    // keep track of the last button pressed
+    if (act == GLFW_RELEASE && btn == w->_mouseButton) {
+        w->_mouseButton = -1;
+    } else if (act == GLFW_PRESS) {
+        w->_mouseButton = btn;
+    }
+}
+
+/*static*/ void Window::_glfw_mouse_move_callback(GLFWwindow* wh, double x, double y)
+{
+    Window* w = static_cast<Window*>(glfwGetWindowUserPointer(wh));
+    Vec2d pos(x, y);
+    Vec2d rel = pos - w->_mousePos;
+    w->_mousePos = pos;
+    for (mouse_move_callback_t& cb : w->_mouseMoveCallbacks) {
+        cb(*w, pos, rel);
+    }
+    // if a button is held, also call drag callbacks
+    if (w->_mouseButton != -1) {
+        for (mouse_drag_callback_t& cb : w->_mouseDragCallbacks) {
+            cb(*w, pos, rel, w->_mouseButton);
+        }
     }
 }
