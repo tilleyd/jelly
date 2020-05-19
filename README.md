@@ -1,6 +1,16 @@
 # geli
 
-`geli` (short for Graphical Extensions Library) is a C++ library that allows you to quickly and easily add a rendered window to your program. `geli` can be used for anything from visually debuggin complex software, creating visualisations or developing a game.
+`geli` (short for Graphical Extensions Library) is a C++ library that allows you to quickly and easily add a window to your program complete with OpenGL rendering capabilities.
+
+## Features
+
+- Simple C++11 API for creating an OpenGL rendering environment
+- Window management that wraps GLFW, complete with event and input system
+- Vector, matrix and quaternion math library
+- Easy 2D/3D primitive rendering with single function calls
+- 2D/3D camera controls
+- Create and render custom meshes
+- Load and work with your own GLSL shaders
 
 ## Installation
 
@@ -18,7 +28,7 @@ Make sure that `/usr/local/lib64` is in the library path if that is the installa
 
 ## Documentation
 
-Online documentation is not supported at the moment. You can have a look at the `include/` folder as most header files contain thorough documentation. Alternatively you can do the following, provided that you have Doxygen installed:
+Online documentation is not available at the moment. You can have a look at the `include/` folder as most header files contain thorough documentation. Alternatively you can do the generate documentation, provided that you have Doxygen installed:
 
 ```
 git clone https://github.com/tilleyd/geli.git

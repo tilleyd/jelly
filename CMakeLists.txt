@@ -13,6 +13,8 @@ add_library(geli STATIC
     src/shader.cpp
     src/window.cpp
 
+    src/camera/orbit_camera.cpp
+
     src/predef/shader_predef.cpp
     src/predef/mesh_predef.cpp
 )
@@ -41,6 +43,7 @@ install(DIRECTORY include/
 #
 
 add_executable(demo.out EXCLUDE_FROM_ALL
+    demo/demo.cpp
     demo/main.cpp
 )
 target_include_directories(demo.out PRIVATE include)
