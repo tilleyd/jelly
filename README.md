@@ -1,6 +1,6 @@
 # geli
 
-`geli` (short for Graphical Extensions Library) is a C++ library that allows you to quickly and easily add a window to your program complete with OpenGL rendering capabilities.
+_geli_ (short for Graphical Extensions Library) is a C++ library that allows you to quickly and easily add a window to your program complete with OpenGL rendering capabilities.
 
 ## Features
 
@@ -13,6 +13,26 @@
 - Load and work with your own GLSL shaders
 
 ## Installation
+
+#### Dependencies
+
+The following dependencies are required for _geli_ to build and run:
+
+- [GLFW 3](https://www.glfw.org/)
+- [GLEW](http://glew.sourceforge.net/)
+- [stb_image](https://github.com/nothings/stb)
+
+On Ubuntu (last tested on 18.04), these can be installed as follows:
+
+```
+sudo apt update
+sudo apt install libglfw3-dev libglew-dev
+
+git clone https://github.com/nothings/stb.git
+sudo cp stb/stb_image.h /usr/local/include/
+```
+
+#### Installing
 
 The following will install the archive library to `/usr/local/lib` or `/usr/local/lib64` and the header files to `/usr/local/include` by default:
 

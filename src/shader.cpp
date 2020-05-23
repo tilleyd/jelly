@@ -40,6 +40,16 @@ unsigned int Shader::get_uniform_handle(const std::string& u)
     }
 }
 
+void Shader::set_uniform(const std::string& u, int i)
+{
+    set_uniform(get_uniform_handle(u), i);
+}
+
+void Shader::set_uniform(unsigned int u, int i)
+{
+    glUniform1i(u, i);
+}
+
 void Shader::set_uniform(const std::string& u, const Vec2f& v)
 {
     set_uniform(get_uniform_handle(u), v);

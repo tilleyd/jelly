@@ -1,8 +1,12 @@
 #ifndef _DEMO_H_
 #define _DEMO_H_
 
-#include <geli/window.hpp>
+#include <memory>
+
 #include <geli/camera.hpp>
+#include <geli/mesh.hpp>
+#include <geli/texture.hpp>
+#include <geli/window.hpp>
 
 class Demo
 {
@@ -20,7 +24,11 @@ public:
 private:
 
     int _counter;
-    geli::OrbitCamera _camera;
+
+    geli::OrbitCamera              _camera;
+    std::shared_ptr<geli::Mesh>    _cubeMesh;
+    std::shared_ptr<geli::Texture> _woodTexture;
+    std::shared_ptr<geli::Texture> _maskTexture;
 
 };
 

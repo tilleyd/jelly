@@ -115,7 +115,7 @@ void Window::add_on_mouse_drag(mouse_drag_callback_t cb)
 
 void Window::clear(const Vec3f& v)
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glClearColor(v.x(), v.y(), v.z(), 1.f);
 }
 
@@ -153,6 +153,7 @@ void Window::_end_glfw()
 void Window::_start_glew()
 {
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
     glEnable(GL_CULL_FACE);
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {

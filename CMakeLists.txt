@@ -11,6 +11,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_library(geli STATIC
     src/mesh.cpp
     src/shader.cpp
+    src/texture.cpp
     src/window.cpp
 
     src/camera/orbit_camera.cpp

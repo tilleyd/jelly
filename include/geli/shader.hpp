@@ -6,6 +6,7 @@
 #include <memory>
 
 #include <geli/math.hpp>
+#include <geli/texture.hpp>
 
 namespace geli
 {
@@ -59,6 +60,10 @@ public:
      *     The name of the shader uniform.
      */
     unsigned int get_uniform_handle(const std::string& u);
+
+    void set_uniform(const std::string& u, int);
+
+    void set_uniform(unsigned int u, int);
 
     void set_uniform(const std::string& u, const Vec2f&);
 

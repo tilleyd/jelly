@@ -13,7 +13,12 @@ void Demo::create(Window& w)
     _counter = 0;
 
     _camera.attach_to(w);
+    _cubeMesh = Mesh::create_cube_mesh(0.5f);
+    _woodTexture = std::make_shared<geli::Texture>("res/wood.png");
+    _woodTexture->bind(0);
+
     Shader::default_shader()->set_uniform("u_P", Mat4f::perspective(DEG_TO_RAD(90.0f), 1280.0f/720.0f, 0.1f, 100.0f));
+    Shader::default_shader()->set_uniform("u_TexDiffuse", 0);
 }
 
 void Demo::draw(Window& w, double p)
@@ -24,9 +29,9 @@ void Demo::draw(Window& w, double p)
     Shader::default_shader()->set_uniform("u_V", _camera.get_view_matrix());
 
     // draw a flat rectangle
-    Shader::default_shader()->set_uniform("u_Color", Vec3f(0.95f, 0.2f, 0.2f));
+    Shader::default_shader()->set_uniform("u_Color", Vec3f(0.9, 0.7f, 0.8f));
     Shader::default_shader()->set_uniform("u_M", Mat4f::translation(Vec3f(0.0f, -1.05f, 0.0f)) * Mat4f::scale(Vec3f(2.0f, 0.1f, 2.0f)));
-    Mesh::cube_mesh()->render();
+    _cubeMesh->render();
 
     // draw a floating cube
     double x = sin(DEG_TO_RAD(_counter * 2.0));
@@ -34,7 +39,7 @@ void Demo::draw(Window& w, double p)
     double z = cos(DEG_TO_RAD(_counter * 2.0));
     Shader::default_shader()->set_uniform("u_Color", Vec3f(0.8f, 0.8f, 0.8f));
     Shader::default_shader()->set_uniform("u_M", Mat4f::translation(Vec3f(x, y + 0.5f, z)));
-    Mesh::cube_mesh()->render();
+    _cubeMesh->render();
 
     _counter = (_counter + 1) % 360;
 }

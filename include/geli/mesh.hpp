@@ -22,14 +22,32 @@ public:
     Mesh& operator=(const Mesh&) = delete;
 
     /**
-     * Returns the predefined square mesh.
+     * Creates a flat square mesh in the xy-plane.
+     *
+     * \param extent
+     *     The square's extent from the centre in each direction.
      */
-    static std::shared_ptr<Mesh> square_mesh();
+    static std::shared_ptr<Mesh> create_square_mesh(float extent=1.0f);
 
     /**
-     * Returns the predefined cube mesh.
+     * Creates a cube mesh.
+     *
+     * \param extent
+     *     The cube's extent from the centre in each direction
      */
-    static std::shared_ptr<Mesh> cube_mesh();
+    static std::shared_ptr<Mesh> create_cube_mesh(float extent=1.0f);
+
+    /**
+     * Creates a sphere mesh.
+     *
+     * \param latRes
+     *     The number of vertices to create along the latitudinal (horizontal).
+     * \param lngRes
+     *     The number of vertices to create along the longitudinal (vertical).
+     * \param radius
+     *     The sphere's radius.
+     */
+    static std::shared_ptr<Mesh> create_sphere_mesh(unsigned int latRes=16, unsigned int lngRes=16, float radius=1.0f);
 
     /**
      * Creates a mesh from the given buffer arrays.
@@ -110,9 +128,6 @@ private:
     unsigned int _ebo;
     unsigned int _vao;
     unsigned int _renderMode;
-
-    static std::shared_ptr<Mesh> _squareMesh;
-    static std::shared_ptr<Mesh> _cubeMesh;
 
 };
 
