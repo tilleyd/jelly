@@ -4,6 +4,7 @@
 #include <memory>
 
 #include <geli/camera.hpp>
+#include <geli/framebuffer.hpp>
 #include <geli/mesh.hpp>
 #include <geli/texture.hpp>
 #include <geli/window.hpp>
@@ -25,10 +26,11 @@ private:
 
     int _counter;
 
-    geli::OrbitCamera              _camera;
-    std::shared_ptr<geli::Mesh>    _cubeMesh;
+    geli::OrbitCamera                  _camera;
+    std::shared_ptr<geli::Mesh>        _sphereMesh;
+    std::shared_ptr<geli::Mesh>        _cubeMesh;
+
     std::shared_ptr<geli::Texture> _woodTexture;
-    std::shared_ptr<geli::Texture> _maskTexture;
 
 };
 

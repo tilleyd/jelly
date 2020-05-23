@@ -113,10 +113,39 @@ void Window::add_on_mouse_drag(mouse_drag_callback_t cb)
     _mouseDragCallbacks.push_back(cb);
 }
 
-void Window::clear(const Vec3f& v)
+void Window::set_clear_color(const Vec3f& c)
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glClearColor(v.x(), v.y(), v.z(), 1.f);
+    glClearColor(c.x(), c.y(), c.z(), 1.0f);
+}
+
+void Window::clear(bool c, bool d, bool s)
+{
+    int flags = 0;
+    flags |= c ? GL_COLOR_BUFFER_BIT : 0;
+    flags |= d ? GL_DEPTH_BUFFER_BIT : 0;
+    flags |= s ? GL_STENCIL_BUFFER_BIT : 0;
+    glClear(flags);
+}
+
+void Window::set_framebuffer(const Framebuffer& fb, const std::vector<unsigned int>* buffers)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, fb.get_handle());
+
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE) {
+        // leave the framebuffer bound and set remaining properties
+        if (buffers) {
+            glDrawBuffers(buffers->size(), buffers->data());
+        }
+    } else {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        throw std::runtime_error("attempt to use incorrectly formed framebuffer");
+    }
+}
+
+void Window::reset_framebuffer()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, _size.x(), _size.y());
 }
 
 void Window::capture_mouse()

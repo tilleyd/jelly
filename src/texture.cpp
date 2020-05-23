@@ -7,15 +7,34 @@
 
 using namespace geli;
 
-Texture::Texture(unsigned int w, unsigned int h, Format format, Filter filter) :
-    _handle(0)
+Texture::Texture(const Vec2i& size, Format format, Filter filter) :
+    _handle(0),
+    _format(format),
+    _size(size)
 {
     glGenTextures(1, &_handle);
     glBindTexture(GL_TEXTURE_2D, _handle);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (unsigned int)filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (unsigned int)filter);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, (unsigned int)format, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    // the framebuffer textures need to have specific formats
+    unsigned int internalFormat, type;
+    switch (format) {
+        case Format::DEPTH:
+            internalFormat = GL_DEPTH_COMPONENT24;
+            type = GL_UNSIGNED_BYTE;
+            break;
+        case Format::DEPTH_STENCIL:
+            internalFormat = GL_DEPTH24_STENCIL8;
+            type = GL_UNSIGNED_INT_24_8;
+            break;
+        default:
+            internalFormat = (unsigned int)format;
+            type = GL_UNSIGNED_BYTE;
+            break;
+    }
+
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, size.x(), size.y(), 0, (unsigned int)format, type, NULL);
 }
 
 Texture::Texture(std::string fn, Filter filter) :
@@ -38,6 +57,8 @@ Texture::Texture(std::string fn, Filter filter) :
             default: throw std::runtime_error("unknown image format"); break;
         }
 
+        _format = format;
+        _size = Vec2i(w, h);
         glTexImage2D(GL_TEXTURE_2D, 0, (unsigned int)format, w, h, 0, (unsigned int)format, GL_UNSIGNED_BYTE, data);
 
         stbi_image_free(data);

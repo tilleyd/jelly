@@ -5,6 +5,8 @@
 
 #include <GL/glew.h>
 
+#include <geli/math.hpp>
+
 namespace geli
 {
 
@@ -15,14 +17,20 @@ namespace geli
 class Texture
 {
 
+public:
+
 /**
  * Texture pixel formats.
  */
 enum class Format
 {
-    GRAY = GL_RED,
+    GRAY = GL_LUMINANCE,
+    GRAYA = GL_LUMINANCE_ALPHA,
     RGB = GL_RGB,
-    RGBA = GL_RGBA
+    RGBA = GL_RGBA,
+
+    DEPTH = GL_DEPTH_COMPONENT,
+    DEPTH_STENCIL = GL_DEPTH_STENCIL
 };
 
 /**
@@ -34,21 +42,17 @@ enum class Filter
     LINEAR = GL_LINEAR
 };
 
-public:
-
 /**
  * Creates an empty texture.
  *
- * \param width
- *     The width of the texture.
- * \param height
- *     The height of the texture.
+ * \param size
+ *     The width and height of the texture.
  * \param format
  *     The pixel format of the texture.
  * \param filter
  *     The min/mag texture filtering to use.
  */
-Texture(unsigned int width, unsigned int height, Format format = Format::RGB, Filter filter = Filter::LINEAR);
+Texture(const Vec2i& size, Format format = Format::RGB, Filter filter = Filter::LINEAR);
 
 /**
  * Creates a texture from a given image file.
@@ -73,7 +77,7 @@ Texture(std::string fn, Filter filter = Filter::LINEAR);
 void generate_mipmaps();
 
 /**
- * Binds a texture to on of the 16 available texture slots. To be used with
+ * Binds a texture to one of the 16 available texture slots. To be used with
  * a sampler, the sampler2D uniform must also be set to this index.
  *
  * \param index
@@ -85,13 +89,25 @@ void generate_mipmaps();
 void bind(unsigned int index);
 
 /**
+ * Returns the format of the texture.
+ */
+Format get_format() const { return _format; }
+
+/**
  * Returns the raw OpenGL texture handle.
  */
 unsigned int get_handle() const { return _handle; }
 
+/**
+ * Returns the size of the texture.
+ */
+Vec2i get_size() const { return _size; }
+
 private:
 
     unsigned int _handle;
+    Format       _format;
+    Vec2i        _size;
 
 };
 

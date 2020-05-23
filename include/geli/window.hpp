@@ -8,6 +8,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <geli/framebuffer.hpp>
 #include <geli/math.hpp>
 
 namespace geli
@@ -182,9 +183,43 @@ public:
     void add_on_mouse_drag(mouse_drag_callback_t);
 
     /**
-     * Clears the rendering area of the window to the given color.
+     * Sets the color that the color buffer will be cleared to.
      */
-    void clear(const Vec3f& color);
+    void set_clear_color(const Vec3f& color);
+
+    /**
+     * Clears the buffers of the current active framebuffer.
+     *
+     * \param color
+     *     If true, clears the color buffer.
+     * \param depth
+     *     If true, clears the depth buffer.
+     * \param stencil
+     *     If true, clears the stencil buffer.
+     */
+    void clear(bool color = true, bool depth = true, bool stencil = true);
+
+    /**
+     * Uses the given framebuffer as the render target for subsequent rendering.
+     *
+     * \param buffers
+     *     A vector of color buffer indices to use as active targets. Only
+     *     used if multiple textures were attached to the buffer as color
+     *     attachments. If null, only the first color buffer will be used.
+     *
+     * \warn Certain framebuffer operations such as creating a new framebuffer
+     * or attaching textures will replace the currently bound framebuffer.
+     *
+     * \throw std::runtime_error if the framebuffer does not have the necessary
+     * attachments or if the format of an attachment is incorrect.
+     */
+    void set_framebuffer(const Framebuffer&, const std::vector<unsigned int>* buffers = nullptr);
+
+    /**
+     * Reverts to the default framebuffer (i.e. the viewport) as the render
+     * target for subsequent rendering.
+     */
+    void reset_framebuffer();
 
     /**
      * Hides and captures the mouse to allow unrestricted mouse movement.
