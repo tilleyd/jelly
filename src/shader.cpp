@@ -1,6 +1,7 @@
 #include <geli/shader.hpp>
 
 #include <stdexcept>
+#include <iostream>
 
 #include <GL/glew.h>
 
@@ -34,7 +35,10 @@ unsigned int Shader::get_uniform_handle(const std::string& u)
         return _uniformCache.at(u);
     } catch (...) {
         // not cached yet, find it
-        unsigned int h = glGetUniformLocation(_shader, u.c_str());
+        int h = glGetUniformLocation(_shader, u.c_str());
+        if (h < 0) {
+            std::cerr << "Warning: uniform " << u << " not found" << std::endl;
+        }
         _uniformCache[u] = h;
         return h;
     }
@@ -70,6 +74,16 @@ void Shader::set_uniform(unsigned int u, const Vec3f& v)
     glUniform3fv(u, 1, v.data());
 }
 
+void Shader::set_uniform(const std::string& u, const Mat3f& m)
+{
+    set_uniform(get_uniform_handle(u), m);
+}
+
+void Shader::set_uniform(unsigned int u, const Mat3f& m)
+{
+    glUniformMatrix3fv(u, 1, GL_FALSE, m.data());
+}
+
 void Shader::set_uniform(const std::string& u, const Mat4f& m)
 {
     set_uniform(get_uniform_handle(u), m);
@@ -97,6 +111,12 @@ unsigned int Shader::_link_program(unsigned int vert, unsigned int frag)
     glDeleteShader(frag);
 
     if (result == GL_FALSE) {
+        char log[512] = {};
+        glGetProgramInfoLog(program, 512, NULL, log);
+        std::cerr << "==============================" << std::endl;
+        std::cerr << "GLSL Shader compilation failed" << std::endl << log;
+        std::cerr << "==============================" << std::endl;
+        glDeleteProgram(program);
         throw std::runtime_error("failed to link vertex and fragment shaders");
     }
     return program;
@@ -112,6 +132,11 @@ unsigned int Shader::_compile_shader(const char* glsl, unsigned int type)
     GLint result = GL_FALSE;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
     if (result == GL_FALSE) {
+        char log[512] = {};
+        glGetShaderInfoLog(shader, 512, NULL, log);
+        std::cerr << "==============================" << std::endl;
+        std::cerr << "GLSL Shader compilation failed" << std::endl << log;
+        std::cerr << "==============================" << std::endl;
         glDeleteShader(shader);
         throw std::runtime_error("failed to compile shader");
     }

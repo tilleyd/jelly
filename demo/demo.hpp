@@ -30,7 +30,10 @@ private:
     std::shared_ptr<geli::Mesh>        _sphereMesh;
     std::shared_ptr<geli::Mesh>        _cubeMesh;
 
+    std::shared_ptr<geli::Texture> _emptyTexture;
     std::shared_ptr<geli::Texture> _woodTexture;
+
+    geli::Mat4f _projMatrix;
 
 };
 

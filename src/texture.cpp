@@ -67,6 +67,17 @@ Texture::Texture(std::string fn, Filter filter) :
     }
 }
 
+Texture::Texture(const Vec3f& v) :
+    _handle(0),
+    _format(Format::RGB),
+    _size(Vec2i(1, 1))
+{
+    glGenTextures(1, &_handle);
+    glBindTexture(GL_TEXTURE_2D, _handle);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_FLOAT, v.data());
+}
+
 Texture::~Texture()
 {
     glDeleteTextures(1, &_handle);

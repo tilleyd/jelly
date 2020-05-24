@@ -67,6 +67,15 @@ Texture(const Vec2i& size, Format format = Format::RGB, Filter filter = Filter::
 Texture(std::string fn, Filter filter = Filter::LINEAR);
 
 /**
+ * Creates a single-pixel texture that can be used to sample a constant value
+ * throughout.
+ *
+ * \param v
+ *     The value of the single pixel.
+ */
+Texture(const Vec3f& v);
+
+/**
  * Clears memory used by the texture.
  */
 ~Texture();

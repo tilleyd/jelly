@@ -73,6 +73,10 @@ public:
 
     void set_uniform(unsigned int u, const Vec3f&);
 
+    void set_uniform(const std::string& u, const Mat3f&);
+
+    void set_uniform(unsigned int u, const Mat3f&);
+
     void set_uniform(const std::string& u, const Mat4f&);
 
     void set_uniform(unsigned int u, const Mat4f&);

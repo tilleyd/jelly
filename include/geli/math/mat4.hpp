@@ -375,14 +375,24 @@ Mat3<T> topleft(const Mat4<T>& m)
     o[0] = a[0];
     o[1] = a[1];
     o[2] = a[2];
-    o[3] = a[5];
-    o[4] = a[6];
-    o[5] = a[7];
-    o[6] = a[9];
-    o[7] = a[10];
-    o[8] = a[11];
+    o[3] = a[4];
+    o[4] = a[5];
+    o[5] = a[6];
+    o[6] = a[7];
+    o[7] = a[8];
+    o[8] = a[10];
 
     return result;
+}
+
+/**
+ * Returns the transposed inverse of the 3x3 top-left part of the matrix. Used
+ * for normal transform calculations.
+ */
+template <typename T>
+Mat3<T> normal_matrix(const Mat4<T>& m)
+{
+    return transposed_inverse(topleft(m));
 }
 
 /**
