@@ -3,6 +3,8 @@
 
 #include <cmath>
 
+#include <geli/math/mat3.hpp>
+
 namespace geli
 {
 
@@ -136,11 +138,6 @@ public:
      */
     const T* data() const { return _data; }
 
-    /**
-     * Matrix-matrix multiplication.
-     */
-    Mat4<T> operator*(const Mat4<T>&) const;
-
 private:
 
     T _data[16];
@@ -267,14 +264,17 @@ Mat4<T> Mat4<T>::scale(Vec3<T> s)
     return Mat4<T>(m);
 }
 
+/**
+ * Matrix-matrix multiplication.
+ */
 template <typename T>
-Mat4<T> Mat4<T>::operator*(const Mat4<T>& m) const
+Mat4<T> operator*(const Mat4<T>& m1, const Mat4<T>& m2)
 {
     // cache-coherent multiplication as done by glm
-    const T* a = _data;
-    const T* b = m._data;
+    const T* a = m1.data();
+    const T* b = m2.data();
     Mat4<T> result;
-    T* o = result._data;
+    T* o = result.data();
 
     T a00 = a[0];
     T a01 = a[1];
@@ -328,6 +328,76 @@ Mat4<T> Mat4<T>::operator*(const Mat4<T>& m) const
     o[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
     o[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
     o[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+
+    return result;
+}
+
+/**
+ * Scalar-matrix multiplication.
+ */
+template <typename T>
+Mat4<T> operator*(T s, const Mat4<T>& m)
+{
+    const T* a = m.data();
+    Mat4<T> result;
+    T* o = result.data();
+    for (unsigned int i = 0; i < 16; ++i) {
+        o[i] = s * a[i];
+    }
+    return result;
+}
+
+/**
+ * Matrix-scalar multiplication.
+ */
+template <typename T>
+Mat4<T> operator*(const Mat4<T>& m, T s)
+{
+    const T* a = m.data();
+    Mat4<T> result;
+    T* o = result.data();
+    for (unsigned int i = 0; i < 16; ++i) {
+        o[i] = a[i] * s;
+    }
+    return result;
+}
+
+/**
+ * Returns the 3x3 top-left part of the matrix.
+ */
+template <typename T>
+Mat3<T> topleft(const Mat4<T>& m)
+{
+    const T* a = m.data();
+    Mat3<T> result;
+    T* o = result.data();
+
+    o[0] = a[0];
+    o[1] = a[1];
+    o[2] = a[2];
+    o[3] = a[5];
+    o[4] = a[6];
+    o[5] = a[7];
+    o[6] = a[9];
+    o[7] = a[10];
+    o[8] = a[11];
+
+    return result;
+}
+
+/**
+ * Returns the transpose of the matrix.
+ */
+template <typename T>
+Mat4<T> transpose(const Mat4<T>& m)
+{
+    Mat4<T> result;
+
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            result(j, i) = m(i, j);
+        }
+    }
 
     return result;
 }
