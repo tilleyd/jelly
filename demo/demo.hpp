@@ -6,6 +6,7 @@
 #include <geli/camera.hpp>
 #include <geli/framebuffer.hpp>
 #include <geli/mesh.hpp>
+#include <geli/shader.hpp>
 #include <geli/texture.hpp>
 #include <geli/window.hpp>
 
@@ -29,6 +30,8 @@ private:
     geli::OrbitCamera                  _camera;
     std::shared_ptr<geli::Mesh>        _sphereMesh;
     std::shared_ptr<geli::Mesh>        _cubeMesh;
+
+    std::shared_ptr<geli::Shader> _geomShader;
 
     std::shared_ptr<geli::Texture> _emptyTexture;
     std::shared_ptr<geli::Texture> _woodTexture;

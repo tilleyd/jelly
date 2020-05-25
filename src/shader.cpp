@@ -1,27 +1,64 @@
 #include <geli/shader.hpp>
 
-#include <stdexcept>
+#include <fstream>
 #include <iostream>
+#include <stdexcept>
+#include <streambuf>
 
 #include <GL/glew.h>
 
 using namespace geli;
 
-Shader::Shader(const std::string& vs, const std::string& fs) :
-    _shader(0)
-{
-    // compile the shaders
-    GLuint vert = _compile_shader(vs.c_str(), GL_VERTEX_SHADER);
-    GLuint frag = _compile_shader(fs.c_str(), GL_FRAGMENT_SHADER);
-    // and link
-    _shader = _link_program(vert, frag);
-}
+Shader::Shader() :
+    _shader(0),
+    _vShader(0),
+    _fShader(0)
+{}
 
 Shader::~Shader()
 {
     if (_shader) {
         glDeleteProgram(_shader);
     }
+}
+
+void Shader::add_vertex_shader(const std::string& glsl)
+{
+    _vShader = _compile_shader(glsl.c_str(), GL_VERTEX_SHADER);
+}
+
+void Shader::add_vertex_shader_file(const std::string& fp)
+{
+    std::ifstream file(fp);
+    if (file.good()) {
+        std::string contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+        add_vertex_shader(contents);
+        file.close();
+    } else {
+        throw std::runtime_error("could not open '" + fp + "'");
+    }
+}
+
+void Shader::add_fragment_shader(const std::string& glsl)
+{
+    _fShader = _compile_shader(glsl.c_str(), GL_FRAGMENT_SHADER);
+}
+
+void Shader::add_fragment_shader_file(const std::string& fp)
+{
+    std::ifstream file(fp);
+    if (file.good()) {
+        std::string contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+        add_fragment_shader(contents);
+        file.close();
+    } else {
+        throw std::runtime_error("could not open '" + fp + "'");
+    }
+}
+
+void Shader::link_shaders()
+{
+    _shader = _link_program(_vShader, _fShader);
 }
 
 void Shader::use() const
@@ -52,6 +89,16 @@ void Shader::set_uniform(const std::string& u, int i)
 void Shader::set_uniform(unsigned int u, int i)
 {
     glUniform1i(u, i);
+}
+
+void Shader::set_uniform(const std::string& u, float f)
+{
+    set_uniform(get_uniform_handle(u), f);
+}
+
+void Shader::set_uniform(unsigned int u, float f)
+{
+    glUniform1f(u, f);
 }
 
 void Shader::set_uniform(const std::string& u, const Vec2f& v)
@@ -113,9 +160,9 @@ unsigned int Shader::_link_program(unsigned int vert, unsigned int frag)
     if (result == GL_FALSE) {
         char log[512] = {};
         glGetProgramInfoLog(program, 512, NULL, log);
-        std::cerr << "==============================" << std::endl;
-        std::cerr << "GLSL Shader compilation failed" << std::endl << log;
-        std::cerr << "==============================" << std::endl;
+        std::cerr << "==========================" << std::endl;
+        std::cerr << "GLSL Shader linking failed" << std::endl << log;
+        std::cerr << "==========================" << std::endl;
         glDeleteProgram(program);
         throw std::runtime_error("failed to link vertex and fragment shaders");
     }

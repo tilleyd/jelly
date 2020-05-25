@@ -17,24 +17,37 @@ Texture::Texture(const Vec2i& size, Format format, Filter filter) :
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (unsigned int)filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (unsigned int)filter);
 
-    // the framebuffer textures need to have specific formats
-    unsigned int internalFormat, type;
+    // some formats need specific internal/external formats and types
+    unsigned int intFormat = (unsigned int)format;
+    unsigned int extFormat = intFormat;
+    unsigned int type = GL_UNSIGNED_BYTE;
     switch (format) {
+        case Format::RGB16F:
+            extFormat = GL_RGB;
+            type = GL_FLOAT;
+            break;
+        case Format::RGB32F:
+            extFormat = GL_RGB;
+            type = GL_FLOAT;
+            break;
+        case Format::RGBA16F:
+            extFormat = GL_RGBA;
+            type = GL_FLOAT;
+            break;
+        case Format::RGBA32F:
+            extFormat = GL_RGBA;
+            type = GL_FLOAT;
+            break;
         case Format::DEPTH:
-            internalFormat = GL_DEPTH_COMPONENT24;
-            type = GL_UNSIGNED_BYTE;
+            intFormat = GL_DEPTH_COMPONENT24;
             break;
         case Format::DEPTH_STENCIL:
-            internalFormat = GL_DEPTH24_STENCIL8;
+            intFormat = GL_DEPTH24_STENCIL8;
             type = GL_UNSIGNED_INT_24_8;
-            break;
-        default:
-            internalFormat = (unsigned int)format;
-            type = GL_UNSIGNED_BYTE;
             break;
     }
 
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, size.x(), size.y(), 0, (unsigned int)format, type, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, intFormat, size.x(), size.y(), 0, extFormat, type, NULL);
 }
 
 Texture::Texture(std::string fn, Filter filter) :

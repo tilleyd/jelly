@@ -132,7 +132,7 @@ namespace
             frag.diffuse = u_Diffuse + texture(u_TexDiffuse, o_UV).xyz;
             frag.specular = u_Specular + texture(u_TexSpecular, o_UV).xyz;
             frag.emissive = u_Emissive + texture(u_TexEmissive, o_UV).xyz;
-            frag.shininess = max(10.000, u_Shininess + texture(u_TexShininess, o_UV).x);
+            frag.shininess = max(1.000, u_Shininess + texture(u_TexShininess, o_UV).x);
 
             vec3 light = directional_light_contribution(u_DirectionalLight, frag);
 
@@ -147,12 +147,11 @@ namespace
     )";
 }
 
-std::shared_ptr<Shader> Shader::_defaultShader = nullptr;
-
-std::shared_ptr<Shader> Shader::default_shader()
+std::shared_ptr<Shader> Shader::create_default_shader()
 {
-    if (!_defaultShader) {
-        _defaultShader = std::make_shared<Shader>(VERTEX_SHADER, FRAGMENT_SHADER);
-    }
-    return _defaultShader;
+    std::shared_ptr<Shader> shader = std::make_shared<Shader>();
+    shader->add_vertex_shader(VERTEX_SHADER);
+    shader->add_fragment_shader(FRAGMENT_SHADER);
+    shader->link_shaders();
+    return shader;
 }

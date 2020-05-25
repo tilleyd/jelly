@@ -9,12 +9,17 @@
 
 using namespace geli;
 
-#define POINT_0_COLOR Vec3f(1.0f, 1.0f, 0.9f)
+#define POINT_0_COLOR Vec3f(0.5f, 0.5f, 0.9f)
+#define POINT_1_COLOR Vec3f(0.5f, 0.9f, 0.5f)
+#define POINT_2_COLOR Vec3f(0.9f, 0.5f, 0.5f)
 
 void Demo::create(Window& w)
 {
     _counter = 0;
 
+    // create the shader
+    _geomShader = Shader::create_default_shader();
+    _geomShader->use();
 
     // create the geometry meshes
     _cubeMesh = Mesh::create_cube_mesh(0.5f);
@@ -26,10 +31,10 @@ void Demo::create(Window& w)
     _emptyTexture->bind(0);
     _woodTexture->bind(1);
     // bind all samplers to the empty texture for default zero samples
-    Shader::default_shader()->set_uniform("u_TexDiffuse", 0);
-    Shader::default_shader()->set_uniform("u_TexSpecular", 0);
-    Shader::default_shader()->set_uniform("u_TexEmissive", 0);
-    Shader::default_shader()->set_uniform("u_TexShininess", 0);
+    _geomShader->set_uniform("u_TexDiffuse", 0);
+    _geomShader->set_uniform("u_TexSpecular", 0);
+    _geomShader->set_uniform("u_TexEmissive", 0);
+    _geomShader->set_uniform("u_TexShininess", 0);
 
     // set up the camera
     _camera.attach_to(w);
@@ -37,10 +42,12 @@ void Demo::create(Window& w)
 
     // set up lighting and background
     w.set_clear_color(Vec3f(0.1f));
-    Shader::default_shader()->set_uniform("u_AmbientLight", Vec3f(0.2f));
-    Shader::default_shader()->set_uniform("u_DirectionalLight.direction", Vec3f(1.0f, -0.8f, 0.5f));
-    Shader::default_shader()->set_uniform("u_DirectionalLight.color", Vec3f(1.0f, 1.0f, 1.0f));
-    Shader::default_shader()->set_uniform("u_PointLights[0].color", POINT_0_COLOR);
+    _geomShader->set_uniform("u_AmbientLight", Vec3f(0.2f));
+    _geomShader->set_uniform("u_DirectionalLight.direction", Vec3f(1.0f, -0.8f, 0.5f));
+    _geomShader->set_uniform("u_DirectionalLight.color", Vec3f(1.0f, 1.0f, 1.0f));
+    _geomShader->set_uniform("u_PointLights[0].color", POINT_0_COLOR);
+    _geomShader->set_uniform("u_PointLights[1].color", POINT_1_COLOR);
+    _geomShader->set_uniform("u_PointLights[2].color", POINT_2_COLOR);
 }
 
 void Demo::draw(Window& w, double p)
@@ -48,17 +55,19 @@ void Demo::draw(Window& w, double p)
     w.clear();
 
     // set the view matrix to the camera
-    Shader::default_shader()->set_uniform("u_ViewProjMatrix", _projMatrix * _camera.get_view_matrix());
-    Shader::default_shader()->set_uniform("u_CameraPosition", _camera.get_position());
+    _geomShader->set_uniform("u_ViewProjMatrix", _projMatrix * _camera.get_view_matrix());
+    _geomShader->set_uniform("u_CameraPosition", _camera.get_position());
 
 
     // draw a flat rectangle
     Mat4f modelMatrix = Mat4f::translation(Vec3f(0.0f, -1.05f, 0.0f)) * Mat4f::scale(Vec3f(2.0f, 0.1f, 2.0f));
-    Shader::default_shader()->set_uniform("u_ModelMatrix", modelMatrix);
-    Shader::default_shader()->set_uniform("u_NormalMatrix", normal_matrix(modelMatrix));
-    Shader::default_shader()->set_uniform("u_TexDiffuse", 0);
-    Shader::default_shader()->set_uniform("u_Diffuse", Vec3f(0.75f, 0.35f, 0.35f));
-    Shader::default_shader()->set_uniform("u_Emissive", Vec3f(0.0f));
+    _geomShader->set_uniform("u_ModelMatrix", modelMatrix);
+    _geomShader->set_uniform("u_NormalMatrix", normal_matrix(modelMatrix));
+    _geomShader->set_uniform("u_TexDiffuse", 0);
+    _geomShader->set_uniform("u_Diffuse", Vec3f(0.75f, 0.35f, 0.35f));
+    _geomShader->set_uniform("u_Emissive", Vec3f(0.0f));
+    _geomShader->set_uniform("u_Specular", Vec3f(1.0f));
+    _geomShader->set_uniform("u_Shininess", 100.0f);
     _cubeMesh->render();
 
     // draw a floating sphere
@@ -66,26 +75,45 @@ void Demo::draw(Window& w, double p)
     double y = sin(DEG_TO_RAD(_counter));
     double z = cos(DEG_TO_RAD(_counter * 2.0));
     modelMatrix = Mat4f::translation(Vec3f(x, y + 0.5f, z));
-    Shader::default_shader()->set_uniform("u_ModelMatrix", modelMatrix);
-    Shader::default_shader()->set_uniform("u_NormalMatrix", normal_matrix(modelMatrix));
-    Shader::default_shader()->set_uniform("u_TexDiffuse", 1);
-    Shader::default_shader()->set_uniform("u_Diffuse", Vec3f(0.0f));
-    Shader::default_shader()->set_uniform("u_Emissive", Vec3f(0.0f));
+    _geomShader->set_uniform("u_ModelMatrix", modelMatrix);
+    _geomShader->set_uniform("u_NormalMatrix", normal_matrix(modelMatrix));
+    _geomShader->set_uniform("u_TexDiffuse", 1);
+    _geomShader->set_uniform("u_Diffuse", Vec3f(0.0f));
+    _geomShader->set_uniform("u_Emissive", Vec3f(0.0f));
+    _geomShader->set_uniform("u_Specular", Vec3f(0.0f));
     _sphereMesh->render();
 
-    // draw a circling light sphere
+    // draw circling light spheres
+    _geomShader->set_uniform("u_TexDiffuse", 0);
+    _geomShader->set_uniform("u_Diffuse", Vec3f(0.0f));
+    _geomShader->set_uniform("u_Specular", Vec3f(0.0f));
+
     x = sin(DEG_TO_RAD(_counter * 0.25)) * 2.0;
     z = cos(DEG_TO_RAD(_counter * 0.25)) * 2.0;
     modelMatrix = Mat4f::translation(Vec3f(x, 0.5f, z)) * Mat4f::scale(Vec3f(0.25f));
-    Shader::default_shader()->set_uniform("u_ModelMatrix", modelMatrix);
-    Shader::default_shader()->set_uniform("u_NormalMatrix", normal_matrix(modelMatrix));
-    Shader::default_shader()->set_uniform("u_TexDiffuse", 0);
-    Shader::default_shader()->set_uniform("u_Diffuse", Vec3f(0.0f));
-    Shader::default_shader()->set_uniform("u_Emissive", POINT_0_COLOR);
+    _geomShader->set_uniform("u_ModelMatrix", modelMatrix);
+    _geomShader->set_uniform("u_NormalMatrix", normal_matrix(modelMatrix));
+    _geomShader->set_uniform("u_Emissive", POINT_0_COLOR);
     _sphereMesh->render();
+    _geomShader->set_uniform("u_PointLights[0].position", Vec3f(x, 0.5f, z));
 
-    // put the point light on the above light sphere
-    Shader::default_shader()->set_uniform("u_PointLights[0].position", Vec3f(x, 0.5f, z));
+    x = sin(DEG_TO_RAD(_counter * 0.25 + 120.0)) * 2.0;
+    z = cos(DEG_TO_RAD(_counter * 0.25 + 120.0)) * 2.0;
+    modelMatrix = Mat4f::translation(Vec3f(x, 0.5f, z)) * Mat4f::scale(Vec3f(0.25f));
+    _geomShader->set_uniform("u_ModelMatrix", modelMatrix);
+    _geomShader->set_uniform("u_NormalMatrix", normal_matrix(modelMatrix));
+    _geomShader->set_uniform("u_Emissive", POINT_1_COLOR);
+    _sphereMesh->render();
+    _geomShader->set_uniform("u_PointLights[1].position", Vec3f(x, 0.5f, z));
+
+    x = sin(DEG_TO_RAD(_counter * 0.25 + 240.0)) * 2.0;
+    z = cos(DEG_TO_RAD(_counter * 0.25 + 240.0)) * 2.0;
+    modelMatrix = Mat4f::translation(Vec3f(x, 0.5f, z)) * Mat4f::scale(Vec3f(0.25f));
+    _geomShader->set_uniform("u_ModelMatrix", modelMatrix);
+    _geomShader->set_uniform("u_NormalMatrix", normal_matrix(modelMatrix));
+    _geomShader->set_uniform("u_Emissive", POINT_2_COLOR);
+    _sphereMesh->render();
+    _geomShader->set_uniform("u_PointLights[2].position", Vec3f(x, 0.5f, z));
 
     ++_counter;
 }

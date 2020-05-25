@@ -22,14 +22,18 @@ class Shader
 
 public:
 
-    Shader() = delete;
     Shader(const Shader&) = delete;
     Shader& operator=(const Shader&) = delete;
 
     /**
-     * Returns the default shader.
+     * Creates and returns an instance of the predefined shader.
      */
-    static std::shared_ptr<Shader> default_shader();
+    static std::shared_ptr<Shader> create_default_shader();
+
+    /**
+     * Creates an empty shader.
+     */
+    Shader();
 
     /**
      * Creates a shader from the given GLSL vertex and fragment shader code.
@@ -49,6 +53,56 @@ public:
     ~Shader();
 
     /**
+     * Compiles and attaches a vertex shader to this program.
+     *
+     * \param s
+     *     The GLSL source code of the vertex shader.
+     *
+     * \throw std::runtime error if compilation failed.
+     */
+    void add_vertex_shader(const std::string& s);
+
+    /**
+     * Reads the vertex shader source code from a file and compiles and
+     * attaches the shader to this program.
+     *
+     * \param fp
+     *     The file path to a GLSL source file.
+     *
+     * \throw std::runtime_error if compilation failed or the file could not
+     *     be read.
+     */
+    void add_vertex_shader_file(const std::string& fp);
+
+    /**
+     * Compiles and attaches a fragment shader to this program.
+     *
+     * \param s
+     *     The GLSL source code of the fragment shader.
+     *
+     * \throw std::runtime error if compilation failed.
+     */
+    void add_fragment_shader(const std::string& s);
+
+    /**
+     * Reads the fragment shader source code from a file and compiles and
+     * attaches the shader to this program.
+     *
+     * \param fp
+     *     The file path to a GLSL source file.
+     *
+     * \throw std::runtime_error if compilation failed or the file could not
+     *     be read.
+     */
+    void add_fragment_shader_file(const std::string& fp);
+
+    /**
+     * Links all added shaders. If successful, the shader program is ready
+     * to use.
+     */
+    void link_shaders();
+
+    /**
      * Sets the shader as the active shader.
      */
     void use() const;
@@ -64,6 +118,10 @@ public:
     void set_uniform(const std::string& u, int);
 
     void set_uniform(unsigned int u, int);
+
+    void set_uniform(const std::string& u, float);
+
+    void set_uniform(unsigned int u, float);
 
     void set_uniform(const std::string& u, const Vec2f&);
 
@@ -123,10 +181,8 @@ private:
      */
     static unsigned int _compile_shader(const char* glsl, unsigned int type);
 
-    unsigned int                        _shader;
+    unsigned int                        _shader, _vShader, _fShader;
     std::map<std::string, unsigned int> _uniformCache;
-
-    static std::shared_ptr<Shader> _defaultShader;
 
 };
 

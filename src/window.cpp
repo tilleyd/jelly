@@ -4,8 +4,6 @@
 #include <iostream>
 #include <stdexcept>
 
-#include <geli/shader.hpp>
-
 using namespace geli;
 
 Window::Window(const std::string& title, const Vec2i& size) :
@@ -192,8 +190,6 @@ void Window::_start_glew()
     std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
     std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-
-    Shader::default_shader()->use();
 }
 
 void Window::_setup_events()
