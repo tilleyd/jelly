@@ -10,7 +10,7 @@ using namespace geli;
 
 namespace
 {
-    static const char* VERTEX_SHADER = R"(#version 330
+    static const char* GEOMETRY_VS = R"(#version 330
         layout (location = 0) in vec3 v_Position;
         layout (location = 1) in vec3 v_Normal;
         layout (location = 2) in vec2 v_UV;
@@ -34,7 +34,20 @@ namespace
         }
     )";
 
-    static const char* FRAGMENT_SHADER = R"(#version 330
+    static const char* FULLSCREEN_VS = R"(#version 330
+        layout (location = 0) in vec3 v_Position;
+        layout (location = 1) in vec3 v_Normal;
+        layout (location = 2) in vec2 v_UV;
+
+        out vec2 o_UV;
+        void main()
+        {
+            gl_Position = vec4(v_Position, 1.0);
+            o_UV = v_UV;
+        }
+    )";
+
+    static const char* GEOMETRY_FS = R"(#version 330
         in vec3 o_Position;
         in vec3 o_Normal;
         in vec2 o_UV;
@@ -92,9 +105,9 @@ namespace
             vec3 lightDiffuse = diff * light.color * frag.diffuse;
 
             // specular light
-            vec3 reflection = reflect(-lightDirection, frag.normal);
             vec3 viewDirection = normalize(u_CameraPosition - frag.position);
-            float spec = pow(max(0.0, dot(viewDirection, reflection)), frag.shininess);
+            vec3 half = normalize(viewDirection + lightDirection);
+            float spec = pow(max(0.0, dot(frag.normal, half)), frag.shininess);
             vec3 lightSpecular = spec * light.color * frag.specular;
 
             return lightDiffuse + lightSpecular;
@@ -110,9 +123,9 @@ namespace
             vec3 lightDiffuse = diff * light.color * frag.diffuse;
 
             // specular light
-            vec3 reflection = reflect(-lightDirection, frag.normal);
             vec3 viewDirection = normalize(u_CameraPosition - frag.position);
-            float spec = pow(max(0.0, dot(viewDirection, reflection)), frag.shininess);
+            vec3 half = normalize(viewDirection + lightDirection);
+            float spec = pow(max(0.0, dot(frag.normal, half)), frag.shininess);
             vec3 lightSpecular = spec * light.color * frag.specular;
 
             // attenuation
@@ -123,7 +136,8 @@ namespace
             return attenuation * (lightDiffuse + lightSpecular);
         }
 
-        out vec4 gl_Color;
+        layout (location = 0) out vec4 o_Color;
+        layout (location = 1) out vec4 o_Bright;
         void main()
         {
             Fragment frag;
@@ -141,17 +155,86 @@ namespace
             }
 
             light += u_AmbientLight * frag.diffuse;
+            vec3 color = light + frag.emissive;
 
-            gl_Color = vec4(light + frag.emissive, 1.0);
+            #define RELATIVE_LUM vec3(0.2126, 0.7152, 0.0722)
+            o_Bright = vec4(step(1.0, dot(color, RELATIVE_LUM)) * color, 1.0);
+
+            o_Color = vec4(color, 1.0);
+        }
+    )";
+
+    static const char* BLOOM_FS = R"(#version 330
+        in vec2 o_UV;
+
+        uniform sampler2D u_TexBrightBuffer;
+        uniform int u_Horizontal = 0;
+
+        // half row of a 9x9 gaussian kernel
+        uniform float u_Weights[5] = float[](0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
+
+        out vec4 o_Color;
+        void main()
+        {
+            vec2 texelOffset = 1.0 / textureSize(u_TexBrightBuffer, 0);
+            // eliminate the unused direction element
+            texelOffset *= vec2(u_Horizontal, 1 - u_Horizontal);
+
+            vec3 color = texture(u_TexBrightBuffer, o_UV).rgb * u_Weights[0];
+            for (int i = 1; i < 5; ++i) {
+                color += texture(u_TexBrightBuffer, o_UV + i*texelOffset).rgb * u_Weights[i];
+                color += texture(u_TexBrightBuffer, o_UV - i*texelOffset).rgb * u_Weights[i];
+            }
+
+            o_Color = vec4(color, 1.0);
+        }
+    )";
+
+    static const char* POST_FS = R"(#version 330
+        in vec2 o_UV;
+
+        uniform sampler2D u_TexColorBuffer;
+        uniform sampler2D u_TexBloomBuffer;
+
+        uniform float u_Exposure = 1.0;
+        uniform float u_Gamma = 2.2;
+
+        out vec4 o_Color;
+        void main()
+        {
+            vec3 color = texture(u_TexColorBuffer, o_UV).rgb + texture(u_TexBloomBuffer, o_UV).rgb;
+            // exposure tonemapping
+            color = vec3(1.0) - exp(-color * u_Exposure);
+            // gamma correction
+            color = pow(color, vec3(1.0/u_Gamma));
+            o_Color = vec4(color, 1.0);
         }
     )";
 }
 
-std::shared_ptr<Shader> Shader::create_default_shader()
+std::shared_ptr<Shader> Shader::create_single_pass_shader()
 {
     std::shared_ptr<Shader> shader = std::make_shared<Shader>();
-    shader->add_vertex_shader(VERTEX_SHADER);
-    shader->add_fragment_shader(FRAGMENT_SHADER);
+    shader->add_vertex_shader(GEOMETRY_VS);
+    shader->add_fragment_shader(GEOMETRY_FS);
+    shader->link_shaders();
+    return shader;
+}
+
+std::shared_ptr<Shader> Shader::create_bloom_shader()
+{
+    std::shared_ptr<Shader> shader = std::make_shared<Shader>();
+    shader->add_vertex_shader(FULLSCREEN_VS);
+    shader->add_fragment_shader(BLOOM_FS);
+    shader->link_shaders();
+    return shader;
+}
+
+std::shared_ptr<Shader> Shader::create_post_shader()
+{
+    std::shared_ptr<Shader> shader = std::make_shared<Shader>();
+    shader->add_vertex_shader(FULLSCREEN_VS);
+    shader->add_fragment_shader(POST_FS);
     shader->link_shaders();
     return shader;
 }

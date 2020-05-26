@@ -26,9 +26,20 @@ public:
     Shader& operator=(const Shader&) = delete;
 
     /**
-     * Creates and returns an instance of the predefined shader.
+     * Creates and returns an instance of the predefined single-pass shader.
      */
-    static std::shared_ptr<Shader> create_default_shader();
+    static std::shared_ptr<Shader> create_single_pass_shader();
+
+    /**
+     * Creates and returns an isntance of the predefined bloom shader.
+     */
+    static std::shared_ptr<Shader> create_bloom_shader();
+
+    /**
+     * Creates and returns an instance of the predefined final post-processing
+     * shader.
+     */
+    static std::shared_ptr<Shader> create_post_shader();
 
     /**
      * Creates an empty shader.

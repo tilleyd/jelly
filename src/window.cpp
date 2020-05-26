@@ -133,6 +133,8 @@ void Window::set_framebuffer(const Framebuffer& fb, const std::vector<unsigned i
         // leave the framebuffer bound and set remaining properties
         if (buffers) {
             glDrawBuffers(buffers->size(), buffers->data());
+        } else {
+            glDrawBuffer(GL_COLOR_ATTACHMENT0);
         }
     } else {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -143,6 +145,7 @@ void Window::set_framebuffer(const Framebuffer& fb, const std::vector<unsigned i
 void Window::reset_framebuffer()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDrawBuffer(GL_COLOR_ATTACHMENT0);
     glViewport(0, 0, _size.x(), _size.y());
 }
 

@@ -27,14 +27,24 @@ private:
 
     int _counter;
 
-    geli::OrbitCamera                  _camera;
-    std::shared_ptr<geli::Mesh>        _sphereMesh;
-    std::shared_ptr<geli::Mesh>        _cubeMesh;
+    geli::OrbitCamera _camera;
+
+    std::shared_ptr<geli::Mesh> _squareMesh;
+    std::shared_ptr<geli::Mesh> _sphereMesh;
+    std::shared_ptr<geli::Mesh> _cubeMesh;
 
     std::shared_ptr<geli::Shader> _geomShader;
+    std::shared_ptr<geli::Shader> _bloomShader;
+    std::shared_ptr<geli::Shader> _postShader;
 
     std::shared_ptr<geli::Texture> _emptyTexture;
     std::shared_ptr<geli::Texture> _woodTexture;
+
+    std::shared_ptr<geli::Framebuffer> _framebuffer;
+    std::shared_ptr<geli::Texture>     _colorBuffer1;
+    std::shared_ptr<geli::Texture>     _colorBuffer2;
+    std::shared_ptr<geli::Texture>     _colorBuffer3;
+    std::shared_ptr<geli::Texture>     _depthBuffer;
 
     geli::Mat4f _projMatrix;
 
