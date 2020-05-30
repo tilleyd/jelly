@@ -72,7 +72,7 @@ Texture::Texture(const Vec2i& size, Format format, Filter filter, Type type) :
     }
 }
 
-Texture::Texture(std::string fn, Filter filter) :
+Texture::Texture(std::string fn, bool isSrgb, Filter filter) :
     _handle(0),
     _type(Type::TEXTURE_2D)
 {
@@ -88,8 +88,8 @@ Texture::Texture(std::string fn, Filter filter) :
         Format format, extFormat;
         switch (channels) {
             case 1: format = Format::GRAY; extFormat = Format::GRAY; break;
-            case 3: format = Format::SRGB; extFormat = Format::RGB; break;
-            case 4: format = Format::SRGBA; extFormat = Format::RGBA; break;
+            case 3: format = isSrgb ? Format::SRGB : Format::RGB; extFormat = Format::RGB; break;
+            case 4: format = isSrgb ? Format::SRGBA : Format::RGBA; extFormat = Format::RGBA; break;
             default: throw std::runtime_error("unknown image format"); break;
         }
 
@@ -103,7 +103,7 @@ Texture::Texture(std::string fn, Filter filter) :
     }
 }
 
-Texture::Texture(std::string fns[6], Filter filter) :
+Texture::Texture(std::string fns[6], bool isSrgb, Filter filter) :
     _handle(0),
     _type(Type::TEXTURE_CUBE)
 {
@@ -144,8 +144,8 @@ Texture::Texture(std::string fns[6], Filter filter) :
     Format format, extFormat;
     switch (channels) {
         case 1: format = Format::GRAY; extFormat = Format::GRAY; break;
-        case 3: format = Format::SRGB; extFormat = Format::RGB; break;
-        case 4: format = Format::SRGBA; extFormat = Format::RGBA; break;
+        case 3: format = isSrgb ? Format::SRGB : Format::RGB; extFormat = Format::RGB; break;
+        case 4: format = isSrgb ? Format::SRGBA : Format::RGBA; extFormat = Format::RGBA; break;
         default: throw std::runtime_error("unknown image format"); break;
     }
 

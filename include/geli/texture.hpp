@@ -78,12 +78,14 @@ Texture(const Vec2i& size, Format format = Format::RGB, Filter filter = Filter::
  *
  * \param fn
  *     The filename of a valid image.
+ * \param isSrgb
+ *     If true, the SRGB/SRGBA format will be chosen instead of RGB/RGBA.
  * \param filter
  *     The min/mag texture filtering to use.
  *
  * \throw std::runtime_error if the image could not be loaded.
  */
-Texture(std::string fn, Filter filter = Filter::LINEAR);
+Texture(std::string fn, bool isSrgb = false, Filter filter = Filter::LINEAR);
 
 /**
  * Creates a cubemap texture from 6 individual image files.
@@ -96,13 +98,15 @@ Texture(std::string fn, Filter filter = Filter::LINEAR);
  *         3 - negative y
  *         4 - positive z
  *         5 - negative z
+ * \param isSrgb
+ *     If true, the SRGB/SRGBA format will be chosen instead of RGB/RGBA.
  * \param filter
  *     The min/mag texture filtering to use.
  *
  * \throw std::runtime_error if the images could not be loaded or if the images
  * differ in format or size.
  */
-Texture(std::string fns[6], Filter filter = Filter::LINEAR);
+Texture(std::string fns[6], bool isSrgb = false, Filter filter = Filter::LINEAR);
 
 /**
  * Creates a single-pixel 2D texture that can be used to sample a constant value

@@ -31,7 +31,7 @@ void Demo::create(Window& w)
 
     // set up textures
     _emptyTexture = std::make_shared<Texture>(Vec3f(0.0f));
-    _woodTexture = std::make_shared<Texture>("res/wood.png");
+    _woodTexture = std::make_shared<Texture>("res/wood.png", true);
     std::string skyboxTexs[6] = {
         "res/side.png",
         "res/side.png",
@@ -40,7 +40,7 @@ void Demo::create(Window& w)
         "res/side.png",
         "res/side.png"
     };
-    _skyboxCube = std::make_shared<Texture>(skyboxTexs);
+    _skyboxCube = std::make_shared<Texture>(skyboxTexs, true);
 
     // set up the framebuffer
     _colorBuffer1 = std::make_shared<Texture>(w.get_size(), Texture::Format::RGB16F);
