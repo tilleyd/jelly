@@ -20,17 +20,27 @@ void Demo::create(Window& w)
 
     // create the shader
     _geomShader = Shader::create_single_pass_shader();
+    _skyboxShader = Shader::create_skybox_shader();
     _bloomShader = Shader::create_bloom_shader();
     _postShader = Shader::create_post_shader();
 
     // create the geometry meshes
     _squareMesh = Mesh::create_square_mesh();
-    _cubeMesh = Mesh::create_cube_mesh(0.5f);
+    _cubeMesh = Mesh::create_cube_mesh(1.0f);
     _sphereMesh = Mesh::create_sphere_mesh(16, 16, 0.5f);
 
     // set up textures
     _emptyTexture = std::make_shared<Texture>(Vec3f(0.0f));
     _woodTexture = std::make_shared<Texture>("res/wood.png");
+    std::string skyboxTexs[6] = {
+        "res/side.png",
+        "res/side.png",
+        "res/top.png",
+        "res/bottom.png",
+        "res/side.png",
+        "res/side.png"
+    };
+    _skyboxCube = std::make_shared<Texture>(skyboxTexs);
 
     // set up the framebuffer
     _colorBuffer1 = std::make_shared<Texture>(w.get_size(), Texture::Format::RGB16F);
@@ -138,6 +148,17 @@ void Demo::draw(Window& w, double p)
     _geomShader->set_uniform("u_Emissive", POINT_2_COLOR);
     _sphereMesh->render();
     _geomShader->set_uniform("u_PointLights[2].position", Vec3f(x, 0.5f, z));
+
+    // skybox
+    glDisable(GL_CULL_FACE);
+    glDepthFunc(GL_LEQUAL);
+    w.set_framebuffer(*_framebuffer);
+    _skyboxShader->use();
+    Mat4f cam = Mat4f(topleft(_camera.get_view_matrix()));
+    _skyboxShader->set_uniform("u_ViewProjMatrix", _projMatrix * cam);
+    _cubeMesh->render();
+    glEnable(GL_CULL_FACE);
+    glDepthFunc(GL_LESS);
 
     // bloom
     _bloomShader->use();

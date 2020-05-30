@@ -44,6 +44,9 @@ public:
     T& operator()(unsigned int r, unsigned int c) { return _data[3*c+r]; }
     T operator()(unsigned int r, unsigned int c) const { return _data[3*c+r]; }
 
+    T& operator[](unsigned int i) { return _data[i]; }
+    T operator[](unsigned int i) const { return _data[i]; }
+
     /**
      * Returns a pointer to the matrix.
      *

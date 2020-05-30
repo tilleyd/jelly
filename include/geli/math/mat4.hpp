@@ -122,6 +122,15 @@ public:
     }
 
     /**
+     * Creates a Mat4 containing the Mat3 as the top-left part of the matrix
+     * and w at position (3, 3).
+     */
+    Mat4(const Mat3<T>& m, T w = 1.0) : _data{m[0], m[1], m[2], 0,
+                                              m[3], m[4], m[5], 0,
+                                              m[6], m[7], m[8], 0,
+                                              0,    0,    0,    w} {}
+
+    /**
      * Returns a pointer to the matrix.
      *
      * \note The array is in column-major form.
@@ -130,6 +139,9 @@ public:
 
     T& operator()(unsigned int r, unsigned int c) { return _data[4*c+r]; }
     T operator()(unsigned int r, unsigned int c) const { return _data[4*c+r]; }
+
+    T& operator[](unsigned int i) { return _data[i]; }
+    T operator[](unsigned int i) const { return _data[i]; }
 
     /**
      * Returns a pointer to the matrix.
@@ -378,8 +390,8 @@ Mat3<T> topleft(const Mat4<T>& m)
     o[3] = a[4];
     o[4] = a[5];
     o[5] = a[6];
-    o[6] = a[7];
-    o[7] = a[8];
+    o[6] = a[8];
+    o[7] = a[9];
     o[8] = a[10];
 
     return result;

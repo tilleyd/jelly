@@ -31,6 +31,11 @@ public:
     static std::shared_ptr<Shader> create_single_pass_shader();
 
     /**
+     * Creates and returns an instance of the predefined skybox shader.
+     */
+    static std::shared_ptr<Shader> create_skybox_shader();
+
+    /**
      * Creates and returns an isntance of the predefined bloom shader.
      */
     static std::shared_ptr<Shader> create_bloom_shader();

@@ -34,6 +34,21 @@ namespace
         }
     )";
 
+    static const char* SKYBOX_VS = R"(#version 330
+        layout (location = 0) in vec3 v_Position;
+        layout (location = 1) in vec3 v_Normal;
+        layout (location = 2) in vec2 v_UV;
+
+        uniform mat4 u_ViewProjMatrix;
+
+        out vec3 o_UVW;
+        void main()
+        {
+            gl_Position = (u_ViewProjMatrix * vec4(v_Position, 1.0)).xyww;
+            o_UVW = v_Position;
+        }
+    )";
+
     static const char* FULLSCREEN_VS = R"(#version 330
         layout (location = 0) in vec3 v_Position;
         layout (location = 1) in vec3 v_Normal;
@@ -164,6 +179,18 @@ namespace
         }
     )";
 
+    static const char* SKYBOX_FS = R"(#version 330
+        in vec3 o_UVW;
+
+        uniform samplerCube u_CubeSkybox;
+
+        out vec4 o_Color;
+        void main()
+        {
+            o_Color = texture(u_CubeSkybox, o_UVW);
+        }
+    )";
+
     static const char* BLOOM_FS = R"(#version 330
         in vec2 o_UV;
 
@@ -217,6 +244,15 @@ std::shared_ptr<Shader> Shader::create_single_pass_shader()
     std::shared_ptr<Shader> shader = std::make_shared<Shader>();
     shader->add_vertex_shader(GEOMETRY_VS);
     shader->add_fragment_shader(GEOMETRY_FS);
+    shader->link_shaders();
+    return shader;
+}
+
+std::shared_ptr<Shader> Shader::create_skybox_shader()
+{
+    std::shared_ptr<Shader> shader = std::make_shared<Shader>();
+    shader->add_vertex_shader(SKYBOX_VS);
+    shader->add_fragment_shader(SKYBOX_FS);
     shader->link_shaders();
     return shader;
 }

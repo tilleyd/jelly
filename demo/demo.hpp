@@ -34,6 +34,7 @@ private:
     std::shared_ptr<geli::Mesh> _cubeMesh;
 
     std::shared_ptr<geli::Shader> _geomShader;
+    std::shared_ptr<geli::Shader> _skyboxShader;
     std::shared_ptr<geli::Shader> _bloomShader;
     std::shared_ptr<geli::Shader> _postShader;
 
@@ -45,6 +46,7 @@ private:
     std::shared_ptr<geli::Texture>     _colorBuffer2;
     std::shared_ptr<geli::Texture>     _colorBuffer3;
     std::shared_ptr<geli::Texture>     _depthBuffer;
+    std::shared_ptr<geli::Texture>     _skyboxCube;
 
     geli::Mat4f _projMatrix;
 
