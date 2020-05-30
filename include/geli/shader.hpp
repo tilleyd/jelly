@@ -91,6 +91,28 @@ public:
     void add_vertex_shader_file(const std::string& fp);
 
     /**
+     * Compiles and attaches a geometry shader to this program.
+     *
+     * \param s
+     *     The GLSL source code of the geometry shader.
+     *
+     * \throw std::runtime error if compilation failed.
+     */
+    void add_geometry_shader(const std::string& s);
+
+    /**
+     * Reads the geometry shader source code from a file and compiles and
+     * attaches the shader to this program.
+     *
+     * \param fp
+     *     The file path to a GLSL source file.
+     *
+     * \throw std::runtime_error if compilation failed or the file could not
+     *     be read.
+     */
+    void add_geometry_shader_file(const std::string& fp);
+
+    /**
      * Compiles and attaches a fragment shader to this program.
      *
      * \param s
@@ -197,7 +219,7 @@ private:
      */
     static unsigned int _compile_shader(const char* glsl, unsigned int type);
 
-    unsigned int                        _shader, _vShader, _fShader;
+    unsigned int                        _shader, _vShader, _gShader, _fShader;
     std::map<std::string, unsigned int> _uniformCache;
 
 };

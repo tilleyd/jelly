@@ -39,6 +39,23 @@ void Shader::add_vertex_shader_file(const std::string& fp)
     }
 }
 
+void Shader::add_geometry_shader(const std::string& glsl)
+{
+    _fShader = _compile_shader(glsl.c_str(), GL_GEOMETRY_SHADER);
+}
+
+void Shader::add_geometry_shader_file(const std::string& fp)
+{
+    std::ifstream file(fp);
+    if (file.good()) {
+        std::string contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+        add_geometry_shader(contents);
+        file.close();
+    } else {
+        throw std::runtime_error("could not open '" + fp + "'");
+    }
+}
+
 void Shader::add_fragment_shader(const std::string& glsl)
 {
     _fShader = _compile_shader(glsl.c_str(), GL_FRAGMENT_SHADER);
