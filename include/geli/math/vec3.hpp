@@ -14,7 +14,7 @@ class Vec3
 
 public:
 
-    Vec3() : _data{0, 0} {};
+    Vec3() : _data{0, 0, 0} {};
 
     Vec3(T v) : _data{v, v, v} {};
 

@@ -3,6 +3,7 @@
 
 #include <cmath>
 
+#include <geli/math/vec4.hpp>
 #include <geli/math/mat3.hpp>
 
 namespace geli
@@ -289,59 +290,66 @@ Mat4<T> operator*(const Mat4<T>& m1, const Mat4<T>& m2)
     T* o = result.data();
 
     T a00 = a[0];
-    T a01 = a[1];
-    T a02 = a[2];
-    T a03 = a[3];
-    T a10 = a[4];
+    T a10 = a[1];
+    T a20 = a[2];
+    T a30 = a[3];
+    T a01 = a[4];
     T a11 = a[5];
-    T a12 = a[6];
-    T a13 = a[7];
-    T a20 = a[8];
-    T a21 = a[9];
+    T a21 = a[6];
+    T a31 = a[7];
+    T a02 = a[8];
+    T a12 = a[9];
     T a22 = a[10];
-    T a23 = a[11];
-    T a30 = a[12];
-    T a31 = a[13];
-    T a32 = a[14];
+    T a32 = a[11];
+    T a03 = a[12];
+    T a13 = a[13];
+    T a23 = a[14];
     T a33 = a[15];
 
-    T b0 = b[0];
-    T b1 = b[1];
-    T b2 = b[2];
-    T b3 = b[3];
-    o[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-    o[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-    o[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-    o[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
-
-    b0 = b[4];
-    b1 = b[5];
-    b2 = b[6];
-    b3 = b[7];
-    o[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-    o[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-    o[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-    o[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
-
-    b0 = b[8];
-    b1 = b[9];
-    b2 = b[10];
-    b3 = b[11];
-    o[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-    o[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-    o[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-    o[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
-
-    b0 = b[12];
-    b1 = b[13];
-    b2 = b[14];
-    b3 = b[15];
-    o[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-    o[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-    o[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-    o[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+    for (unsigned int col = 0; col < 4; ++col) {
+        unsigned int i1 = col*4;
+        unsigned int i2 = i1+1;
+        unsigned int i3 = i1+2;
+        unsigned int i4 = i1+3;
+        T b0 = b[i1];
+        T b1 = b[i2];
+        T b2 = b[i3];
+        T b3 = b[i4];
+        o[i1] = a00*b0 + a01*b1 + a02*b2 + a03*b3;
+        o[i2] = a10*b0 + a11*b1 + a12*b2 + a13*b3;
+        o[i3] = a20*b0 + a21*b1 + a22*b2 + a23*b3;
+        o[i4] = a30*b0 + a31*b1 + a32*b2 + a33*b3;
+    }
 
     return result;
+}
+
+/**
+ * Vector-matrix multiplication.
+ */
+template <typename T>
+Vec4<T> operator*(const Mat4<T>& m, const Vec4<T>& v)
+{
+    const T* a = m.data();
+    const T* b = v.data();
+
+    T v0 = v.x();
+    T v1 = v.y();
+    T v2 = v.z();
+    T v3 = v.w();
+
+    return Vec4<T>(
+        m[0]*v0 + m[4]*v1 + m[8]*v2 + m[12]*v3,
+        m[1]*v0 + m[5]*v1 + m[9]*v2 + m[13]*v3,
+        m[2]*v0 + m[6]*v1 + m[10]*v2 + m[14]*v3,
+        m[3]*v0 + m[7]*v1 + m[11]*v2 + m[15]*v3
+    );
+    // return Vec4<T>(
+    //     m[0]*v0 + m[1]*v1 + m[2]*v2 + m[3]*v3,
+    //     m[4]*v0 + m[5]*v1 + m[6]*v2 + m[7]*v3,
+    //     m[8]*v0 + m[9]*v1 + m[10]*v2 + m[11]*v3,
+    //     m[12]*v0 + m[13]*v1 + m[14]*v2 + m[15]*v3
+    // );
 }
 
 /**

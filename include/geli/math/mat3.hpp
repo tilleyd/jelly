@@ -3,6 +3,8 @@
 
 #include <cmath>
 
+#include <geli/math/vec3.hpp>
+
 namespace geli
 {
 
@@ -97,6 +99,26 @@ Mat3<T> operator*(const Mat3<T>& m1, const Mat3<T>& m2)
     }
 
     return result;
+}
+
+/**
+ * Vector-matrix multiplication.
+ */
+template <typename T>
+Vec3<T> operator*(const Mat3<T>& m, const Vec3<T>& v)
+{
+    const T* a = m.data();
+    const T* b = v.data();
+
+    T v0 = v.x();
+    T v1 = v.y();
+    T v2 = v.z();
+
+    return Vec3<T>(
+        m[0]*v0 + m[4]*v1 + m[8]*v2,
+        m[1]*v0 + m[5]*v1 + m[9]*v2,
+        m[2]*v0 + m[6]*v1 + m[10]*v2
+    );
 }
 
 /**
