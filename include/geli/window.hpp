@@ -10,6 +10,7 @@
 
 #include <geli/framebuffer.hpp>
 #include <geli/math.hpp>
+#include <geli/renderer.hpp>
 
 namespace geli
 {
@@ -18,18 +19,25 @@ class Window;
 
 /**
  * A window create callback function.
+ *
+ * \param Window
+ *     The window that triggered the event.
+ * \param Renderer
+ *     The renderer associated with the window.
  */
-typedef std::function<void(Window&)> create_callback_t;
+typedef std::function<void(Window&, Renderer&)> create_callback_t;
 
 /**
  * A draw loop callback function.
  *
  * \param Window
  *     The window that triggered the event.
+ * \param Renderer
+ *     The renderer associated with the window.
  * \param double
  *     The time passed since the previous draw call.
  */
-typedef std::function<void(Window&, double)> draw_callback_t;
+typedef std::function<void(Window&, Renderer&, double)> draw_callback_t;
 
 /**
  * A window close callback function. Should return true to allow the window
@@ -183,45 +191,6 @@ public:
     void add_on_mouse_drag(mouse_drag_callback_t);
 
     /**
-     * Sets the color that the color buffer will be cleared to.
-     */
-    void set_clear_color(const Vec3f& color);
-
-    /**
-     * Clears the buffers of the current active framebuffer.
-     *
-     * \param color
-     *     If true, clears the color buffer.
-     * \param depth
-     *     If true, clears the depth buffer.
-     * \param stencil
-     *     If true, clears the stencil buffer.
-     */
-    void clear(bool color = true, bool depth = true, bool stencil = true);
-
-    /**
-     * Uses the given framebuffer as the render target for subsequent rendering.
-     *
-     * \param buffers
-     *     A vector of color buffer indices to use as active targets. Only
-     *     used if multiple textures were attached to the buffer as color
-     *     attachments. If null, only the first color buffer will be used.
-     *
-     * \warn Certain framebuffer operations such as creating a new framebuffer
-     * or attaching textures will replace the currently bound framebuffer.
-     *
-     * \throw std::runtime_error if the framebuffer does not have the necessary
-     * attachments or if the format of an attachment is incorrect.
-     */
-    void set_framebuffer(const Framebuffer&, const std::vector<unsigned int>* buffers = nullptr);
-
-    /**
-     * Reverts to the default framebuffer (i.e. the viewport) as the render
-     * target for subsequent rendering.
-     */
-    void reset_framebuffer();
-
-    /**
      * Hides and captures the mouse to allow unrestricted mouse movement.
      */
     void capture_mouse();
@@ -288,6 +257,8 @@ private:
     std::vector<mouse_button_callback_t> _mouseButtonCallbacks;
     std::vector<mouse_move_callback_t>   _mouseMoveCallbacks;
     std::vector<mouse_drag_callback_t>   _mouseDragCallbacks;
+
+    std::shared_ptr<Renderer> _renderer;
 
     void _start_glfw();
 

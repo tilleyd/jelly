@@ -10,7 +10,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_library(geli STATIC
     src/framebuffer.cpp
+    src/light.cpp
+    src/material.cpp
     src/mesh.cpp
+    src/renderable.cpp
+    src/renderer.cpp
     src/shader.cpp
     src/texture.cpp
     src/window.cpp

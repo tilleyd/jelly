@@ -15,9 +15,9 @@ class Demo
 
 public:
 
-    void create(geli::Window&);
+    void create(geli::Window&, geli::Renderer&);
 
-    void draw(geli::Window&, double p);
+    void draw(geli::Window&, geli::Renderer&, double p);
 
     void on_key(geli::Window&, int, int, int, int);
 
@@ -29,26 +29,11 @@ private:
 
     geli::OrbitCamera _camera;
 
-    std::shared_ptr<geli::Mesh> _squareMesh;
-    std::shared_ptr<geli::Mesh> _sphereMesh;
-    std::shared_ptr<geli::Mesh> _cubeMesh;
-
-    std::shared_ptr<geli::Shader> _geomShader;
-    std::shared_ptr<geli::Shader> _skyboxShader;
-    std::shared_ptr<geli::Shader> _bloomShader;
-    std::shared_ptr<geli::Shader> _postShader;
-
-    std::shared_ptr<geli::Texture> _emptyTexture;
-    std::shared_ptr<geli::Texture> _woodTexture;
-
-    std::shared_ptr<geli::Framebuffer> _framebuffer;
-    std::shared_ptr<geli::Texture>     _colorBuffer1;
-    std::shared_ptr<geli::Texture>     _colorBuffer2;
-    std::shared_ptr<geli::Texture>     _colorBuffer3;
-    std::shared_ptr<geli::Texture>     _depthBuffer;
-    std::shared_ptr<geli::Texture>     _skyboxCube;
-
-    geli::Mat4f _projMatrix;
+    std::shared_ptr<geli::Renderable> _sphere;
+    std::shared_ptr<geli::Renderable> _redLight;
+    std::shared_ptr<geli::Renderable> _greenLight;
+    std::shared_ptr<geli::Renderable> _blueLight;
+    std::shared_ptr<geli::Renderable> _platform;
 
 };
 

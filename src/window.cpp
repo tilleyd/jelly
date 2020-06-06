@@ -37,8 +37,9 @@ void Window::create_windowed()
         glfwSetWindowUserPointer(_windowHandle, this);
         _start_glew();
         _setup_events();
+        _renderer = std::make_shared<Renderer>(this);
         if (_createCallback) {
-            _createCallback(*this);
+            _createCallback(*this, *_renderer);
         }
         _draw_loop();
     }
@@ -59,8 +60,10 @@ void Window::create_fullscreen()
         glfwMakeContextCurrent(_windowHandle);
         glfwSetWindowUserPointer(_windowHandle, this);
         _start_glew();
+        _setup_events();
+        _renderer = std::make_shared<Renderer>(this);
         if (_createCallback) {
-            _createCallback(*this);
+            _createCallback(*this, *_renderer);
         }
         _draw_loop();
     }
@@ -109,44 +112,6 @@ void Window::add_on_mouse_move(mouse_move_callback_t cb)
 void Window::add_on_mouse_drag(mouse_drag_callback_t cb)
 {
     _mouseDragCallbacks.push_back(cb);
-}
-
-void Window::set_clear_color(const Vec3f& c)
-{
-    glClearColor(c.x(), c.y(), c.z(), 1.0f);
-}
-
-void Window::clear(bool c, bool d, bool s)
-{
-    int flags = 0;
-    flags |= c ? GL_COLOR_BUFFER_BIT : 0;
-    flags |= d ? GL_DEPTH_BUFFER_BIT : 0;
-    flags |= s ? GL_STENCIL_BUFFER_BIT : 0;
-    glClear(flags);
-}
-
-void Window::set_framebuffer(const Framebuffer& fb, const std::vector<unsigned int>* buffers)
-{
-    glBindFramebuffer(GL_FRAMEBUFFER, fb.get_handle());
-
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE) {
-        // leave the framebuffer bound and set remaining properties
-        if (buffers) {
-            glDrawBuffers(buffers->size(), buffers->data());
-        } else {
-            glDrawBuffer(GL_COLOR_ATTACHMENT0);
-        }
-    } else {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        throw std::runtime_error("attempt to use incorrectly formed framebuffer");
-    }
-}
-
-void Window::reset_framebuffer()
-{
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDrawBuffer(GL_COLOR_ATTACHMENT0);
-    glViewport(0, 0, _size.x(), _size.y());
 }
 
 void Window::capture_mouse()
@@ -212,7 +177,7 @@ void Window::_draw_loop()
         double period = std::chrono::duration_cast<std::chrono::nanoseconds>(point - epoch).count() * 1.0e-9;
         epoch = point;
         if (_drawCallback) {
-            _drawCallback(*this, period);
+            _drawCallback(*this, *_renderer, period);
         }
         glfwSwapBuffers(_windowHandle);
 
