@@ -1,6 +1,7 @@
 #include <geli/renderer.hpp>
 
 #include <string>
+#include <stdexcept>
 
 #include <geli/window.hpp>
 

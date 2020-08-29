@@ -121,8 +121,8 @@ namespace
 
             // specular light
             vec3 viewDirection = normalize(u_CameraPosition - frag.position);
-            vec3 half = normalize(viewDirection + lightDirection);
-            float spec = pow(max(0.0, dot(frag.normal, half)), frag.shininess);
+            vec3 h = normalize(viewDirection + lightDirection);
+            float spec = pow(max(0.0, dot(frag.normal, h)), frag.shininess);
             vec3 lightSpecular = spec * light.color * frag.specular;
 
             return lightDiffuse + lightSpecular;
@@ -139,8 +139,8 @@ namespace
 
             // specular light
             vec3 viewDirection = normalize(u_CameraPosition - frag.position);
-            vec3 half = normalize(viewDirection + lightDirection);
-            float spec = pow(max(0.0, dot(frag.normal, half)), frag.shininess);
+            vec3 h = normalize(viewDirection + lightDirection);
+            float spec = pow(max(0.0, dot(frag.normal, h)), frag.shininess);
             vec3 lightSpecular = spec * light.color * frag.specular;
 
             // attenuation
