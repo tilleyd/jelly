@@ -34,6 +34,12 @@ void Context::render_mesh(const Mesh& mesh) {
 }
 
 
+void Context::bind_texture(const Texture& tex, unsigned int index) {
+    // TODO avoid binding if texture is already bound
+    tex._bind(index);
+}
+
+
 void Context::clear(const Vec3& color) {
     glClearColor(color.x(), color.y(), color.z(), 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

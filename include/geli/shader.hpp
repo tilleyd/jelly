@@ -79,9 +79,9 @@ public:
 
     void set_uniform_mat4(unsigned int u, const Mat4&);
 
-    void set_uniform_sampler(const std::string& u, const Texture*);
+    void set_uniform_sampler(const std::string& u, const Texture&);
 
-    void set_uniform_sampler(unsigned int u, const Texture*);
+    void set_uniform_sampler(unsigned int u, const Texture&);
 
     bool is_active() const {
         return _activeContext != nullptr;

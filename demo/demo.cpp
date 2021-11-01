@@ -12,7 +12,8 @@ using namespace geli;
 
 Demo::Demo() :
     _shader(nullptr),
-    _square(nullptr)
+    _square(nullptr),
+    _wood(nullptr)
 {}
 
 
@@ -23,6 +24,9 @@ Demo::~Demo() {
     if (_square) {
         delete _square;
     }
+    if (_wood) {
+        delete _wood;
+    }
 }
 
 
@@ -32,12 +36,15 @@ void Demo::create(Window& w, Context& c) {
 
     _shader = new Shader(vs, fs);
     _square = Mesh::square_mesh();
+    _wood = new Texture("../res/wood.png");
+
+    c.activate_shader(*_shader);
+    _shader->set_uniform_sampler("u_TexDiffuse", *_wood);
 }
 
 
 void Demo::draw(Window& w, Context& c, double p) {
     c.clear(Vec3(0.1f, 0.2f, 0.3f));
-    c.activate_shader(*_shader);
     c.render_mesh(*_square);
 }
 

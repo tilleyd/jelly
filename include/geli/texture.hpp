@@ -5,26 +5,23 @@
 
 #include <GL/glew.h>
 
-#include <geli/math.hpp>
+#include <geli/math/vec2.hpp>
+#include <geli/math/vec3.hpp>
 
-namespace geli
-{
+namespace geli {
 
 /**
  * A texture that can be applied to a shader or used as a render target when
- * using framebuffers. Supports various formats and types, including regular 2D
- * and cubemap textures.
+ * using framebuffers.
  */
-class Texture
-{
+class Texture {
 
 public:
 
     /**
      * Texture types.
      */
-    enum class Type
-    {
+    enum class Type {
         TEXTURE_2D,
         TEXTURE_CUBE
     };
@@ -32,8 +29,7 @@ public:
     /**
      * Texture pixel formats.
      */
-    enum class Format
-    {
+    enum class Format {
         GRAY = GL_LUMINANCE,
         GRAYA = GL_LUMINANCE_ALPHA,
         RGB = GL_RGB,
@@ -52,8 +48,7 @@ public:
     /**
      * Texture filtering types.
      */
-    enum class Filter
-    {
+    enum class Filter {
         NEAREST = GL_NEAREST,
         LINEAR = GL_LINEAR
     };
@@ -73,8 +68,8 @@ public:
      *     The type of the texture.
      */
     Texture(
-        unsigned int width,
-        unsigned int height,
+        int width,
+        int height,
         Format format = Format::RGB,
         Filter filter = Filter::LINEAR,
         Type type = Type::TEXTURE_2D
@@ -83,16 +78,16 @@ public:
     /**
      * Creates a 2D texture from a given image file.
      *
-     * \param fn
+     * \param path
      *     The filename of a valid image.
-     * \param isSrgb
+     * \param srgb
      *     If true, the SRGB/SRGBA format will be chosen instead of RGB/RGBA.
      * \param filter
      *     The min/mag texture filtering to use.
      *
      * \throw std::runtime_error if the image could not be loaded.
      */
-    Texture(std::string fn, bool isSrgb = false, Filter filter = Filter::LINEAR);
+    Texture(std::string path, Filter filter = Filter::LINEAR, bool srgb = false);
 
     /**
      * Creates a cubemap texture from 6 individual image files.
@@ -105,7 +100,7 @@ public:
      *         3 - negative y
      *         4 - positive z
      *         5 - negative z
-     * \param isSrgb
+     * \param srgb
      *     If true, the SRGB/SRGBA format will be chosen instead of RGB/RGBA.
      * \param filter
      *     The min/mag texture filtering to use.
@@ -113,14 +108,13 @@ public:
      * \throw std::runtime_error if the images could not be loaded or if the images
      * differ in format or size.
      */
-    Texture(std::string fns[6], bool isSrgb = false, Filter filter = Filter::LINEAR);
+    Texture(std::string fns[6], Filter filter = Filter::LINEAR, bool srgb = false);
 
     /**
-     * Creates a single-pixel 2D texture that can be used to sample a constant value
-     * throughout.
+     * Creates a 1x1 2D texture that can be used to sample a constant value.
      *
      * \param v
-     *     The value of the single pixel.
+     *     The RGB value of the single pixel.
      */
     Texture(const Vec3& v);
 
@@ -135,33 +129,25 @@ public:
     void generate_mipmaps();
 
     /**
-     * Binds a texture to one of the 16 available texture slots. To be used with
-     * a sampler, the sampler2D uniform must also be set to this index.
-     *
-     * \param index
-     *     The texture index, ranging from 0 to 15, inclusive.
-     *
-     * \warn Certain texture operations such as creating a new texture or generating
-     * mipmaps may replace the last bound texture.
-     */
-    void bind(unsigned int index);
-
-    /**
      * Returns the format of the texture.
      */
     Format get_format() const { return _format; }
-
-    /**
-     * Returns the raw OpenGL texture handle.
-     */
-    unsigned int get_handle() const { return _handle; }
 
     /**
      * Returns the size of the texture.
      */
     Vec2 get_size() const { return _size; }
 
+    /**
+     * Returns the raw OpenGL texture handle.
+     */
+    unsigned int get_gl_handle() const { return _handle; }
+
 private:
+
+    friend class Context;
+
+    void _bind(unsigned int index) const;
 
     unsigned int _handle;
     Type         _type;

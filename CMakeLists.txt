@@ -12,6 +12,7 @@ add_library(geli STATIC
     src/context.cpp
     src/mesh.cpp
     src/shader.cpp
+    src/texture.cpp
     src/window.cpp
 
     src/math/vec2.cpp

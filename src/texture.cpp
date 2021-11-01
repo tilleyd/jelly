@@ -5,22 +5,23 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
-using namespace geli;
+namespace geli {
 
-Texture::Texture(const Vec2i& size, Format format, Filter filter, Type type) :
+
+Texture::Texture(int width, int height, Format format, Filter filter, Type type) :
     _handle(0),
     _type(type),
     _format(format),
-    _size(size)
+    _size(width, height)
 {
     glGenTextures(1, &_handle);
 
-    unsigned int bindTarget = type == Type::TEXTURE_2D ? GL_TEXTURE_2D : GL_TEXTURE_CUBE_MAP;
+    unsigned int bindTarget = (type == Type::TEXTURE_2D ? GL_TEXTURE_2D : GL_TEXTURE_CUBE_MAP);
     glBindTexture(bindTarget, _handle);
     glTexParameteri(bindTarget, GL_TEXTURE_MIN_FILTER, (unsigned int)filter);
     glTexParameteri(bindTarget, GL_TEXTURE_MAG_FILTER, (unsigned int)filter);
 
-    // some formats need specific internal/external formats and pixel types
+    // Some formats need specific internal/external formats and pixel types
     unsigned int intFormat = (unsigned int)format;
     unsigned int extFormat = intFormat;
     unsigned int pixelType = GL_UNSIGNED_BYTE;
@@ -57,53 +58,95 @@ Texture::Texture(const Vec2i& size, Format format, Filter filter, Type type) :
     }
 
     if (type == Type::TEXTURE_CUBE) {
-        // set wrapping type
+        // Set wrapping type
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-        // create texture buffers for each face
+        // Create texture buffers for each face
         for (unsigned int i = 0; i < 6; ++i) {
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                         0, intFormat, size.x(), size.y(),
-                         0, extFormat, pixelType, NULL);
+            glTexImage2D(
+                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                0,
+                intFormat,
+                width,
+                height,
+                0,
+                extFormat,
+                pixelType,
+                nullptr
+            );
         }
     } else {
-        glTexImage2D(GL_TEXTURE_2D, 0, intFormat, size.x(), size.y(), 0, extFormat, pixelType, NULL);
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            intFormat,
+            width,
+            height,
+            0,
+            extFormat,
+            pixelType,
+            nullptr
+        );
     }
 }
 
-Texture::Texture(std::string fn, bool isSrgb, Filter filter) :
+
+Texture::Texture(std::string path, Filter filter, bool srgb) :
     _handle(0),
     _type(Type::TEXTURE_2D)
 {
-    int w, h, channels;
-    unsigned char* data = stbi_load(fn.c_str(), &w, &h, &channels, 0);
+    int width, height, channels;
+    unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+
     if (data) {
         glGenTextures(1, &_handle);
         glBindTexture(GL_TEXTURE_2D, _handle);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (unsigned int)filter);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (unsigned int)filter);
 
-        // choose the data format
+        // Choose the data format
         Format format, extFormat;
         switch (channels) {
-            case 1: format = Format::GRAY; extFormat = Format::GRAY; break;
-            case 3: format = isSrgb ? Format::SRGB : Format::RGB; extFormat = Format::RGB; break;
-            case 4: format = isSrgb ? Format::SRGBA : Format::RGBA; extFormat = Format::RGBA; break;
-            default: throw std::runtime_error("unknown image format"); break;
+            case 1:
+                format = Format::GRAY;
+                extFormat = Format::GRAY;
+                break;
+            case 3:
+                format = srgb ? Format::SRGB : Format::RGB;
+                extFormat = Format::RGB;
+                break;
+            case 4:
+                format = srgb ? Format::SRGBA : Format::RGBA;
+                extFormat = Format::RGBA;
+                break;
+            default:
+                throw std::runtime_error("Unknown image format");
+                break;
         }
 
         _format = format;
-        _size = Vec2i(w, h);
-        glTexImage2D(GL_TEXTURE_2D, 0, (unsigned int)format, w, h, 0, (unsigned int)extFormat, GL_UNSIGNED_BYTE, data);
+        _size = Vec2(width, height);
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            (unsigned int)format,
+            width,
+            height,
+            0,
+            (unsigned int)extFormat,
+            GL_UNSIGNED_BYTE,
+            data
+        );
 
         stbi_image_free(data);
     } else {
-        throw std::runtime_error("could not load texture \'" + fn + "\'");
+        throw std::runtime_error("Could not load texture \'" + path + "\'");
     }
 }
 
-Texture::Texture(std::string fns[6], bool isSrgb, Filter filter) :
+
+Texture::Texture(std::string fns[6], Filter filter, bool srgb) :
     _handle(0),
     _type(Type::TEXTURE_CUBE)
 {
@@ -115,23 +158,23 @@ Texture::Texture(std::string fns[6], bool isSrgb, Filter filter) :
         throw std::runtime_error("could not load texture \'" + fns[0] + "\'");
     }
 
+    // Check that all images are similar in format
     for (unsigned int i = 1; i < 6; ++i) {
         int w, h, c;
         data[i] = stbi_load(fns[i].c_str(), &w, &h, &c, 0);
         if (!data[i] || w != width || h != height || c != channels) {
-            // delete all images including this one
+            // Delete all images including this one
             for (unsigned int j = 0; j <= i; ++j) {
                 stbi_image_free(data[j]);
             }
             if (data[i]) {
-                throw std::runtime_error("cube textures must have similar formats");
+                throw std::runtime_error("Cube textures must have similar formats");
             } else {
-                throw std::runtime_error("could not load texture \'" + fns[i] + "\'");
+                throw std::runtime_error("Could not load texture \'" + fns[i] + "\'");
             }
         }
     }
 
-    // loaded all images, continue
     glGenTextures(1, &_handle);
     glBindTexture(GL_TEXTURE_CUBE_MAP, _handle);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, (unsigned int)filter);
@@ -140,31 +183,40 @@ Texture::Texture(std::string fns[6], bool isSrgb, Filter filter) :
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-    // choose the data format
+    // Choose the data format
     Format format, extFormat;
     switch (channels) {
         case 1: format = Format::GRAY; extFormat = Format::GRAY; break;
-        case 3: format = isSrgb ? Format::SRGB : Format::RGB; extFormat = Format::RGB; break;
-        case 4: format = isSrgb ? Format::SRGBA : Format::RGBA; extFormat = Format::RGBA; break;
+        case 3: format = srgb ? Format::SRGB : Format::RGB; extFormat = Format::RGB; break;
+        case 4: format = srgb ? Format::SRGBA : Format::RGBA; extFormat = Format::RGBA; break;
         default: throw std::runtime_error("unknown image format"); break;
     }
 
-    _size = Vec2i(width, height);
+    _size = Vec2(width, height);
     _format = format;
     // create the texture buffers
     for (unsigned int i = 0; i < 6; ++i) {
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                     0, (unsigned int)format, width, height,
-                     0, (unsigned int)extFormat, GL_UNSIGNED_BYTE, data[i]);
+        glTexImage2D(
+            GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+            0,
+            (unsigned int)format,
+            width,
+            height,
+            0,
+            (unsigned int)extFormat,
+            GL_UNSIGNED_BYTE,
+            data[i]
+        );
         stbi_image_free(data[i]);
     }
 }
 
-Texture::Texture(const Vec3f& v) :
+
+Texture::Texture(const Vec3& v) :
     _handle(0),
     _type(Type::TEXTURE_2D),
     _format(Format::RGB),
-    _size(Vec2i(1, 1))
+    _size(Vec2(1, 1))
 {
     glGenTextures(1, &_handle);
     glBindTexture(GL_TEXTURE_2D, _handle);
@@ -172,19 +224,22 @@ Texture::Texture(const Vec3f& v) :
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_FLOAT, v.data());
 }
 
-Texture::~Texture()
-{
+
+Texture::~Texture() {
     glDeleteTextures(1, &_handle);
 }
 
-void Texture::generate_mipmaps()
-{
+
+void Texture::generate_mipmaps() {
     glBindTexture(GL_TEXTURE_2D, _handle);
     glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-void Texture::bind(unsigned int i)
-{
+
+void Texture::_bind(unsigned int i) const {
     glActiveTexture(GL_TEXTURE0 + i);
     glBindTexture(GL_TEXTURE_2D, _handle);
+}
+
+
 }

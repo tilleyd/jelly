@@ -1,6 +1,8 @@
 #ifndef _GELI_CONTEXT_HPP_
 #define _GELI_CONTEXT_HPP_
 
+#include <map>
+
 #include <geli/mesh.hpp>
 #include <geli/shader.hpp>
 
@@ -30,6 +32,14 @@ public:
      * Renders the given mesh using the last applied shader.
      */
     void render_mesh(const Mesh&);
+
+    /**
+     * Binds a texture to one of the 16 available texture slots.
+     *
+     * \warning Certain texture operations such as creating a new texture or
+     * generating mipmaps may replace the last bound texture.
+     */
+    void bind_texture(const Texture&, unsigned int index = 0);
 
     /**
      * Clears the buffer to the given colour.
@@ -71,7 +81,9 @@ private:
     Context(Window* owner);
 
     Window* _owner;
+
     Shader* _activeShader;
+    std::map<const Texture*, unsigned int> _boundTextures;
 
 };
 

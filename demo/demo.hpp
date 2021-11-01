@@ -29,8 +29,9 @@ private:
 
     std::string load_file(const std::string& path) const;
 
-    geli::Shader* _shader;
-    geli::Mesh*   _square;
+    geli::Shader*  _shader;
+    geli::Mesh*    _square;
+    geli::Texture* _wood;
 
 };
 

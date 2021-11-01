@@ -7,6 +7,8 @@
 
 #include <GL/glew.h>
 
+#include <geli/context.hpp>
+
 namespace {
 
 
@@ -215,15 +217,17 @@ void Shader::set_uniform_mat4(unsigned int u, const Mat4& m) {
 }
 
 
-void Shader::set_uniform_sampler(const std::string& u, const Texture* tex) {
+void Shader::set_uniform_sampler(const std::string& u, const Texture& tex) {
     set_uniform_sampler(get_uniform_handle(u), tex);
 }
 
 
-void Shader::set_uniform_sampler(unsigned int u, const Texture* tex) {
-    _samplerUniformCache[u] = tex;
+void Shader::set_uniform_sampler(unsigned int u, const Texture& tex) {
+    _samplerUniformCache[u] = &tex;
     if (is_active()) {
-        // TODO use context to bind the texture
+        unsigned int bindIndex = _samplerUniformCache.size() - 1;
+        _activeContext->bind_texture(tex, bindIndex);
+        glUniform1i(u, bindIndex);
     }
 }
 
@@ -254,8 +258,12 @@ void Shader::_activate(Context* c) {
     for (auto& pair : _mat4UniformCache) {
         glUniformMatrix4fv(pair.first, 1, GL_FALSE, pair.second.data());
     }
+
+    unsigned int i = 0;
     for (auto& pair : _samplerUniformCache) {
-        // TODO use context to bind the texture
+        c->bind_texture(*pair.second, i);
+        glUniform1i(pair.first, i);
+        i += 1;
     }
 }
 
