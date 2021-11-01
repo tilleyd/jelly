@@ -10,34 +10,38 @@
 
 #include <geli/framebuffer.hpp>
 #include <geli/math.hpp>
-#include <geli/renderer.hpp>
+#include <geli/context.hpp>
 
 namespace geli
 {
 
+
 class Window;
+
 
 /**
  * A window create callback function.
  *
  * \param Window
  *     The window that triggered the event.
- * \param Renderer
- *     The renderer associated with the window.
+ * \param Context
+ *     The rendering context associated with the window.
  */
-typedef std::function<void(Window&, Renderer&)> create_callback_t;
+typedef std::function<void(Window&, Context&)> create_callback_t;
+
 
 /**
  * A draw loop callback function.
  *
  * \param Window
  *     The window that triggered the event.
- * \param Renderer
- *     The renderer associated with the window.
+ * \param Context
+ *     The rendering context associated with the window.
  * \param double
  *     The time passed since the previous draw call.
  */
-typedef std::function<void(Window&, Renderer&, double)> draw_callback_t;
+typedef std::function<void(Window&, Context&, double)> draw_callback_t;
+
 
 /**
  * A window close callback function. Should return true to allow the window
@@ -45,10 +49,12 @@ typedef std::function<void(Window&, Renderer&, double)> draw_callback_t;
  */
 typedef std::function<bool(Window&)> close_callback_t;
 
+
 /**
  * A window exit callback function.
  */
 typedef std::function<void(Window&)> exit_callback_t;
+
 
 /**
  * A keyboard event callback function.
@@ -64,6 +70,7 @@ typedef std::function<void(Window&)> exit_callback_t;
  */
 typedef std::function<void(Window&, int, int, int, int)> key_callback_t;
 
+
 /**
  * A mouse button event callback function.
  *
@@ -76,6 +83,7 @@ typedef std::function<void(Window&, int, int, int, int)> key_callback_t;
  */
 typedef std::function<void(Window&, int, int, int)> mouse_button_callback_t;
 
+
 /**
  * A mouse move event callback function.
  *
@@ -84,7 +92,8 @@ typedef std::function<void(Window&, int, int, int)> mouse_button_callback_t;
  * \param Vec2d
  *     The position of the mouse relative to the previous position.
  */
-typedef std::function<void(Window&, const Vec2d&, const Vec2d&)> mouse_move_callback_t;
+typedef std::function<void(Window&, const Vec2&, const Vec2&)> mouse_move_callback_t;
+
 
 /**
  * A mouse drag event callback function.
@@ -96,7 +105,8 @@ typedef std::function<void(Window&, const Vec2d&, const Vec2d&)> mouse_move_call
  * \param int
  *     The token of the mouse button being held.
  */
-typedef std::function<void(Window&, const Vec2d&, const Vec2d&, int)> mouse_drag_callback_t;
+typedef std::function<void(Window&, const Vec2&, const Vec2&, int)> mouse_drag_callback_t;
+
 
 /**
  * Defines a window used for the rendering environment.
@@ -118,10 +128,12 @@ public:
      *
      * \param title
      *     The title of the window.
-     * \param size
-     *     The pixel size (width, height) of the window.
+     * \param width
+     *     The pixel width of the window.
+     * \param height
+     *     The pixel height of the window.
      */
-    Window(const std::string& title, const Vec2i& size);
+    Window(const std::string& title, int width, int height);
 
     /**
      * Closes and discards the window.
@@ -135,6 +147,14 @@ public:
      * \throw std::runtime_error if creation of the window failed.
      */
     void create_windowed();
+
+    /**
+     * Creates and shows the window in borderless fullscreen mode. This passes
+     * control to the window's draw loop.
+     *
+     * \throw std::runtime_error if creation of the window failed.
+     */
+    void create_borderless();
 
     /**
      * Creates and shows the window in fullscreen mode. This passes control to
@@ -209,9 +229,9 @@ public:
     /**
      * Returns the size of the window.
      */
-    Vec2i get_size() const
+    Vec2 get_size() const
     {
-        return _size;
+        return Vec2(_width, _height);
     }
 
     /**
@@ -242,8 +262,8 @@ private:
 
     GLFWwindow*  _windowHandle;
     std::string  _title;
-    Vec2i        _size;
-    Vec2d        _mousePos;
+    int          _width, _height;
+    Vec2         _mousePos;
     int          _mouseButton;
 
     bool _willExit, _isActive;
@@ -258,7 +278,7 @@ private:
     std::vector<mouse_move_callback_t>   _mouseMoveCallbacks;
     std::vector<mouse_drag_callback_t>   _mouseDragCallbacks;
 
-    std::shared_ptr<Renderer> _renderer;
+    Context* _context;
 
     void _start_glfw();
 

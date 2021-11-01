@@ -3,37 +3,34 @@
 
 #include <memory>
 
-#include <geli/camera.hpp>
-#include <geli/framebuffer.hpp>
-#include <geli/mesh.hpp>
 #include <geli/shader.hpp>
 #include <geli/texture.hpp>
 #include <geli/window.hpp>
+#include <geli/mesh.hpp>
 
 class Demo
 {
 
 public:
 
-    void create(geli::Window&, geli::Renderer&);
+    Demo();
 
-    void draw(geli::Window&, geli::Renderer&, double p);
+    ~Demo();
+
+    void create(geli::Window&, geli::Context&);
+
+    void draw(geli::Window&, geli::Context&, double p);
 
     void on_key(geli::Window&, int, int, int, int);
 
-    void on_mouse_move(geli::Window&, const geli::Vec2d&, const geli::Vec2d&);
+    void on_mouse_move(geli::Window&, const geli::Vec2&, const geli::Vec2&);
 
 private:
 
-    int _counter;
+    std::string load_file(const std::string& path) const;
 
-    geli::OrbitCamera _camera;
-
-    std::shared_ptr<geli::Renderable> _sphere;
-    std::shared_ptr<geli::Renderable> _redLight;
-    std::shared_ptr<geli::Renderable> _greenLight;
-    std::shared_ptr<geli::Renderable> _blueLight;
-    std::shared_ptr<geli::Renderable> _platform;
+    geli::Shader* _shader;
+    geli::Mesh*   _square;
 
 };
 

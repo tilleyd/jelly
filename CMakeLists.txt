@@ -9,20 +9,16 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #
 
 add_library(geli STATIC
-    src/framebuffer.cpp
-    src/light.cpp
-    src/material.cpp
+    src/context.cpp
     src/mesh.cpp
-    src/renderable.cpp
-    src/renderer.cpp
     src/shader.cpp
-    src/texture.cpp
     src/window.cpp
 
-    src/camera/orbit_camera.cpp
-
-    src/predef/shader_predef.cpp
-    src/predef/mesh_predef.cpp
+    src/math/vec2.cpp
+    src/math/vec3.cpp
+    src/math/vec4.cpp
+    src/math/mat3.cpp
+    src/math/mat4.cpp
 )
 set_target_properties(geli PROPERTIES
     VERSION ${PROJECT_VERSION}

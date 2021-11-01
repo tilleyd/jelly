@@ -1,19 +1,20 @@
 #ifndef _GELI_MESH_HPP_
 #define _GELI_MESH_HPP_
 
-#include <memory>
+#include <vector>
 
 #include <GL/glew.h>
 
-namespace geli
-{
+#include <geli/math/vec2.hpp>
+#include <geli/math/vec3.hpp>
+
+namespace geli {
 
 /**
  * Represents a renderable geometry mesh containing vertex, normal and uv-coord
  * buffers with an index array.
  */
-class Mesh
-{
+class Mesh {
 
 public:
 
@@ -27,7 +28,7 @@ public:
      * \param extent
      *     The square's extent from the centre in each direction.
      */
-    static std::shared_ptr<Mesh> create_square_mesh(float extent=1.0f);
+    static Mesh* square_mesh(float extent=1.0f);
 
     /**
      * Creates a cube mesh.
@@ -35,7 +36,7 @@ public:
      * \param extent
      *     The cube's extent from the centre in each direction
      */
-    static std::shared_ptr<Mesh> create_cube_mesh(float extent=1.0f);
+    static Mesh* cube_mesh(float extent=1.0f);
 
     /**
      * Creates a sphere mesh.
@@ -47,36 +48,31 @@ public:
      * \param radius
      *     The sphere's radius.
      */
-    static std::shared_ptr<Mesh> create_sphere_mesh(unsigned int latRes=16, unsigned int lngRes=16, float radius=1.0f);
+    static Mesh* sphere_mesh(unsigned int latRes=16, unsigned int lngRes=16, float radius=1.0f);
 
     /**
      * Creates a mesh from the given buffer arrays.
      *
      * \param vertices
-     *     The array of vertices. The vertex array must be in the format
-     *     { x1, y1, z1 ... xn, yn, zn } and have size 3*n.
+     *     The vector of vertices.
      * \param normals
-     *     The array of vertex normals. The normals array must be in the
-     *     format { x1, y1, z1 ... xn, yn, zn } and have size 3*n.
+     *     The vector of vertex normals, equal in length to `vertices`.
      * \param uvs
-     *     The array of UV/texture coordinates. The UV array must be in the
-     *     format { u1, v1 ... un, vn } and have size 2*n.
+     *     The vector of UV/texture coordinates, equal in length to `vertices`.
      * \param indices
      *     The index array used for rendering primitives. Must have the
-     *     appropriate size for the mode specified.
-     * \param n
-     *     The number of vertices in the mesh.
+     *     appropriate size for the primitive mode specified.
      * \param mode
-     *     The OpenGL rendering mode used to render the vertices, e.g.
+     *     The OpenGL primitive mode used to render the vertices, e.g.
      *     GL_POINTS, GL_LINE_STRIP, GL_TRIANGLES, etc.
      */
-    Mesh(const float vertices[],
-            const float normals[],
-            const float uvs[],
-            unsigned int n,
-            const unsigned int indices[],
-            unsigned int ni,
-            unsigned int mode = GL_TRIANGLES);
+    Mesh(
+        const std::vector<Vec3>& vertices,
+        const std::vector<Vec3>& normals,
+        const std::vector<Vec2>& uvs,
+        const std::vector<unsigned int> indices,
+        unsigned int mode = GL_TRIANGLES
+    );
 
     /**
      * Clears resources used by the mesh.
@@ -84,14 +80,9 @@ public:
     ~Mesh();
 
     /**
-     * Renders the current mesh using the active shader.
-     */
-    void render() const;
-
-    /**
      * Returns a handle to the OpenGL vertex buffer object.
      */
-    unsigned int get_vbo() const
+    unsigned int get_vbo_handle() const
     {
         return _vbo;
     }
@@ -99,7 +90,7 @@ public:
     /**
      * Returns a handle to the OpenGL element buffer object.
      */
-    unsigned int get_ebo() const
+    unsigned int get_ebo_handle() const
     {
         return _ebo;
     }
@@ -107,7 +98,7 @@ public:
     /**
      * Returns a handle to the OpenGL vertex attribute object.
      */
-    unsigned int get_vao() const
+    unsigned int get_vao_handle() const
     {
         return _vao;
     }
@@ -122,7 +113,10 @@ public:
 
 private:
 
-    unsigned int _numVertices;
+    friend class Context;
+
+    void _render() const;
+
     unsigned int _numIndices;
     unsigned int _vbo;
     unsigned int _ebo;
@@ -131,6 +125,6 @@ private:
 
 };
 
-};
+}
 
 #endif
