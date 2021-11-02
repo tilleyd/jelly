@@ -113,6 +113,8 @@ private:
     std::map<unsigned int, Mat4> _mat4UniformCache;
     std::map<unsigned int, const Texture*> _samplerUniformCache;
 
+    std::map<unsigned int, unsigned int> _samplerBindingLocations;
+
     Context* _activeContext;
 
 };

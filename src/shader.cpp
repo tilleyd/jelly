@@ -224,8 +224,15 @@ void Shader::set_uniform_sampler(const std::string& u, const Texture& tex) {
 
 void Shader::set_uniform_sampler(unsigned int u, const Texture& tex) {
     _samplerUniformCache[u] = &tex;
+
     if (is_active()) {
-        unsigned int bindIndex = _samplerUniformCache.size() - 1;
+        unsigned int bindIndex;
+        try {
+            bindIndex = _samplerBindingLocations.at(u);
+        } catch (...) {
+            bindIndex = _samplerUniformCache.size() - 1;
+            _samplerBindingLocations[u] = bindIndex;
+        }
         _activeContext->bind_texture(tex, bindIndex);
         glUniform1i(u, bindIndex);
     }
@@ -263,6 +270,7 @@ void Shader::_activate(Context* c) {
     for (auto& pair : _samplerUniformCache) {
         c->bind_texture(*pair.second, i);
         glUniform1i(pair.first, i);
+        _samplerBindingLocations[pair.first] = i;
         i += 1;
     }
 }
