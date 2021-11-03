@@ -4,8 +4,6 @@
 #include <fstream>
 
 #include <geli/math.hpp>
-#include <geli/mesh.hpp>
-#include <geli/shader.hpp>
 
 using namespace geli;
 
@@ -13,7 +11,9 @@ using namespace geli;
 Demo::Demo() :
     _shader(nullptr),
     _square(nullptr),
-    _wood(nullptr)
+    _wood(nullptr),
+    _colorBuffer(nullptr),
+    _framebuffer(nullptr)
 {}
 
 
@@ -27,6 +27,12 @@ Demo::~Demo() {
     if (_wood) {
         delete _wood;
     }
+    if (_colorBuffer) {
+        delete _colorBuffer;
+    }
+    if (_framebuffer) {
+        delete _framebuffer;
+    }
 }
 
 
@@ -39,12 +45,20 @@ void Demo::create(Window& w, Context& c) {
     _wood = new Texture("../res/wood.png");
 
     c.activate_shader(*_shader);
-    _shader->set_uniform_sampler("u_TexDiffuse", *_wood);
+
+    _colorBuffer = new Texture(640, 360);
+    _framebuffer = new Framebuffer();
+    _framebuffer->attach_color(*_colorBuffer);
 }
 
 
 void Demo::draw(Window& w, Context& c, double p) {
     c.clear(Vec3(0.1f, 0.2f, 0.3f));
+    c.set_framebuffer(*_framebuffer);
+    _shader->set_uniform_sampler("u_TexDiffuse", *_wood);
+    c.render_mesh(*_square);
+    c.reset_framebuffer();
+    _shader->set_uniform_sampler("u_TexDiffuse", *_colorBuffer);
     c.render_mesh(*_square);
 }
 

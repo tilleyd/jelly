@@ -3,6 +3,7 @@
 
 #include <map>
 
+#include <geli/framebuffer.hpp>
 #include <geli/mesh.hpp>
 #include <geli/shader.hpp>
 
@@ -49,11 +50,6 @@ public:
     /**
      * Uses the given framebuffer as the render target for subsequent rendering.
      *
-     * \param buffers
-     *     A vector of color buffer indices to use as active targets. Only
-     *     used if multiple textures were attached to the buffer as color
-     *     attachments. If null, only the first color buffer will be used.
-     *
      * \warning Certain framebuffer operations such as creating a new
      * framebuffer or attaching textures will replace the currently bound
      * framebuffer.
@@ -61,13 +57,13 @@ public:
      * \throw std::runtime_error if the framebuffer does not have the necessary
      * attachments or if the format of an attachment is incorrect.
      */
-    // void set_framebuffer(const Framebuffer&, const std::vector<unsigned int>* buffers = nullptr);
+    void set_framebuffer(const Framebuffer&);
 
     /**
      * Reverts to the default framebuffer (i.e. the window viewport) as the
      * render target for subsequent rendering.
      */
-    // void reset_framebuffer();
+    void reset_framebuffer();
 
     /**
      * Returns the window that owns this context.
@@ -80,10 +76,16 @@ private:
 
     Context(Window* owner);
 
+    /**
+     * Sets the rendering viewport to the given width and height.
+     */
+    void _set_viewport(int width, int height);
+
     Window* _owner;
 
     Shader* _activeShader;
     std::map<const Texture*, unsigned int> _boundTextures;
+    int _vpWidth, _vpHeight;
 
 };
 

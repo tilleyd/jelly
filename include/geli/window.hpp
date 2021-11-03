@@ -227,12 +227,19 @@ public:
     void restore_mouse();
 
     /**
-     * Returns the size of the window.
+     * Returns the width of the window in pixels.
      */
-    Vec2 get_size() const
-    {
-        return Vec2(_width, _height);
-    }
+    int get_width() const { return _width; }
+
+    /**
+     * Returns the height of the window in pixels.
+     */
+    int get_height() const { return _height; }
+
+    /**
+     * Returns the size of the window in pixels.
+     */
+    Vec2 get_size() const { return Vec2(_width, _height); }
 
     /**
      * Returns true if the window will exit at the end of the current draw step.

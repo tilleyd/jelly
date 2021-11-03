@@ -10,7 +10,11 @@ namespace geli {
 Context::Context(Window* owner) :
     _owner(owner),
     _activeShader(nullptr)
-{}
+{
+    Vec2 windowSize = owner->get_size();
+    _vpWidth = windowSize.x();
+    _vpHeight = windowSize.y();
+}
 
 
 Context::~Context() {}
@@ -46,29 +50,27 @@ void Context::clear(const Vec3& color) {
 }
 
 
-/* void Context::set_framebuffer(const Framebuffer& fb, const std::vector<unsigned int>* buffers)
-{
-    glBindFramebuffer(GL_FRAMEBUFFER, fb.get_handle());
+void Context::set_framebuffer(const Framebuffer& fb) {
+    fb._bind();
 
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE) {
-        // leave the framebuffer bound and set remaining properties
-        if (buffers) {
-            glDrawBuffers(buffers->size(), buffers->data());
-        } else {
-            glDrawBuffer(GL_COLOR_ATTACHMENT0);
-        }
-    } else {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        throw std::runtime_error("attempt to use incorrectly formed framebuffer");
-    }
-} */
+    _set_viewport(fb.get_width(), fb.get_height());
+}
 
 
-/* void Context::reset_framebuffer()
-{
+void Context::reset_framebuffer() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDrawBuffer(GL_COLOR_ATTACHMENT0);
-} */
+
+    _set_viewport(_owner->get_width(), _owner->get_height());
+}
+
+void Context::_set_viewport(int width, int height) {
+    if (width != _vpWidth || height != _vpHeight) {
+        glViewport(0, 0, width, height);
+        _vpWidth = width;
+        _vpHeight = height;
+    }
+}
 
 
 }

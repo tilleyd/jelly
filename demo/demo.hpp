@@ -3,10 +3,11 @@
 
 #include <memory>
 
+#include <geli/framebuffer.hpp>
+#include <geli/mesh.hpp>
 #include <geli/shader.hpp>
 #include <geli/texture.hpp>
 #include <geli/window.hpp>
-#include <geli/mesh.hpp>
 
 class Demo
 {
@@ -32,6 +33,9 @@ private:
     geli::Shader*  _shader;
     geli::Mesh*    _square;
     geli::Texture* _wood;
+
+    geli::Texture* _colorBuffer;
+    geli::Framebuffer* _framebuffer;
 
 };
 

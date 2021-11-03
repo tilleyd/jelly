@@ -134,9 +134,19 @@ public:
     Format get_format() const { return _format; }
 
     /**
-     * Returns the size of the texture.
+     * Returns the width of the texture in pixels.
      */
-    Vec2 get_size() const { return _size; }
+    int get_width() const { return _width; }
+
+    /**
+     * Returns the height of the texture in pixels.
+     */
+    int get_height() const { return _height; }
+
+    /**
+     * Returns the size of the texture in pixels.
+     */
+    Vec2 get_size() const { return Vec2(_width, _height); }
 
     /**
      * Returns the raw OpenGL texture handle.
@@ -152,7 +162,7 @@ private:
     unsigned int _handle;
     Type         _type;
     Format       _format;
-    Vec2         _size;
+    int          _width, _height;
 
 };
 

@@ -12,7 +12,8 @@ Texture::Texture(int width, int height, Format format, Filter filter, Type type)
     _handle(0),
     _type(type),
     _format(format),
-    _size(width, height)
+    _width(width),
+    _height(height)
 {
     glGenTextures(1, &_handle);
 
@@ -126,7 +127,8 @@ Texture::Texture(std::string path, Filter filter, bool srgb) :
         }
 
         _format = format;
-        _size = Vec2(width, height);
+        _width = width;
+        _height = height;
         glTexImage2D(
             GL_TEXTURE_2D,
             0,
@@ -192,7 +194,8 @@ Texture::Texture(std::string fns[6], Filter filter, bool srgb) :
         default: throw std::runtime_error("unknown image format"); break;
     }
 
-    _size = Vec2(width, height);
+    _width = width;
+    _height = height;
     _format = format;
     // create the texture buffers
     for (unsigned int i = 0; i < 6; ++i) {
@@ -216,7 +219,8 @@ Texture::Texture(const Vec3& v) :
     _handle(0),
     _type(Type::TEXTURE_2D),
     _format(Format::RGB),
-    _size(Vec2(1, 1))
+    _width(1),
+    _height(1)
 {
     glGenTextures(1, &_handle);
     glBindTexture(GL_TEXTURE_2D, _handle);
