@@ -1,8 +1,8 @@
-#include <geli/math/mat4.hpp>
+#include <jelly/math/mat4.hpp>
 
 #include <cmath>
 
-namespace geli {
+namespace jelly {
 
 
 Mat4 Mat4::perspective(float fov, float ratio, float n, float f) {

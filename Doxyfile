@@ -6,9 +6,9 @@
 
 DOXYFILE_ENCODING      = UTF-8
 
-PROJECT_NAME           = "geli"
+PROJECT_NAME           = "jelly"
 PROJECT_NUMBER         = "0.0.0"
-PROJECT_BRIEF          = "https://github.com/tilleyd/geli"
+PROJECT_BRIEF          = "https://github.com/tilleyd/jelly"
 # PROJECT_LOGO           = max 200x50
 
 OUTPUT_DIRECTORY       = "doc/"

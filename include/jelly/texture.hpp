@@ -1,14 +1,14 @@
-#ifndef _GELI_TEXTURE_HPP_
-#define _GELI_TEXTURE_HPP_
+#ifndef _JELLY_TEXTURE_HPP_
+#define _JELLY_TEXTURE_HPP_
 
 #include <string>
 
 #include <GL/glew.h>
 
-#include <geli/math/vec2.hpp>
-#include <geli/math/vec3.hpp>
+#include <jelly/math/vec2.hpp>
+#include <jelly/math/vec3.hpp>
 
-namespace geli {
+namespace jelly {
 
 /**
  * A texture that can be applied to a shader or used as a render target when

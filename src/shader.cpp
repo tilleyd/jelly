@@ -1,4 +1,4 @@
-#include <geli/shader.hpp>
+#include <jelly/shader.hpp>
 
 #include <fstream>
 #include <iostream>
@@ -7,7 +7,7 @@
 
 #include <GL/glew.h>
 
-#include <geli/context.hpp>
+#include <jelly/context.hpp>
 
 namespace {
 
@@ -92,7 +92,7 @@ unsigned int link_program(unsigned int vert, unsigned int frag) {
 }
 
 
-namespace geli {
+namespace jelly {
 
 
 Shader::Shader(const std::string& vs, const std::string& fs) {

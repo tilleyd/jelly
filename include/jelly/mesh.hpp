@@ -1,14 +1,14 @@
-#ifndef _GELI_MESH_HPP_
-#define _GELI_MESH_HPP_
+#ifndef _JELLY_MESH_HPP_
+#define _JELLY_MESH_HPP_
 
 #include <vector>
 
 #include <GL/glew.h>
 
-#include <geli/math/vec2.hpp>
-#include <geli/math/vec3.hpp>
+#include <jelly/math/vec2.hpp>
+#include <jelly/math/vec3.hpp>
 
-namespace geli {
+namespace jelly {
 
 /**
  * Represents a renderable geometry mesh containing vertex, normal and uv-coord

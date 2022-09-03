@@ -1,14 +1,14 @@
-#ifndef _GELI_SHADER_HPP_
-#define _GELI_SHADER_HPP_
+#ifndef _JELLY_SHADER_HPP_
+#define _JELLY_SHADER_HPP_
 
 #include <string>
 #include <map>
 #include <memory>
 
-#include <geli/math.hpp>
-#include <geli/texture.hpp>
+#include <jelly/math.hpp>
+#include <jelly/texture.hpp>
 
-namespace geli {
+namespace jelly {
 
 class Context;
 

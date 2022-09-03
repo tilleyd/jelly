@@ -1,8 +1,8 @@
-#include <geli/framebuffer.hpp>
+#include <jelly/framebuffer.hpp>
 
 #include <stdexcept>
 
-namespace geli {
+namespace jelly {
 
 Framebuffer::Framebuffer() :
     _handle(0),

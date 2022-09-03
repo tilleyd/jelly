@@ -1,11 +1,11 @@
-#ifndef _GELI_MATH_VEC3_HPP_
-#define _GELI_MATH_VEC3_HPP_
+#ifndef _JELLY_MATH_VEC3_HPP_
+#define _JELLY_MATH_VEC3_HPP_
 
 #include <cmath>
 
-#include <geli/math/vec2.hpp>
+#include <jelly/math/vec2.hpp>
 
-namespace geli
+namespace jelly
 {
 
 class Vec3

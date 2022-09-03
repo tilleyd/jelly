@@ -1,10 +1,10 @@
-#include <geli/context.hpp>
+#include <jelly/context.hpp>
 
 #include <GL/glew.h>
 
-#include <geli/window.hpp>
+#include <jelly/window.hpp>
 
-namespace geli {
+namespace jelly {
 
 
 Context::Context(Window* owner) :

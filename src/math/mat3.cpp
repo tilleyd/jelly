@@ -1,8 +1,8 @@
-#include <geli/math/mat3.hpp>
+#include <jelly/math/mat3.hpp>
 
 #include <cmath>
 
-namespace geli {
+namespace jelly {
 
 
 Mat3 operator*(const Mat3& m1, const Mat3& m2)

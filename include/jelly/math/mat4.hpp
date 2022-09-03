@@ -1,10 +1,10 @@
-#ifndef _GELI_MATH_MAT4_HPP_
-#define _GELI_MATH_MAT4_HPP_
+#ifndef _JELLY_MATH_MAT4_HPP_
+#define _JELLY_MATH_MAT4_HPP_
 
-#include <geli/math/vec4.hpp>
-#include <geli/math/mat3.hpp>
+#include <jelly/math/vec4.hpp>
+#include <jelly/math/mat3.hpp>
 
-namespace geli
+namespace jelly
 {
 
 class Mat4

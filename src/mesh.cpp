@@ -1,7 +1,7 @@
-#include <geli/mesh.hpp>
+#include <jelly/mesh.hpp>
 
 
-namespace geli {
+namespace jelly {
 
 
 Mesh* Mesh::square_mesh(float ext) {

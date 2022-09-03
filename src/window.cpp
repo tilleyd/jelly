@@ -1,10 +1,10 @@
-#include <geli/window.hpp>
+#include <jelly/window.hpp>
 
 #include <chrono>
 #include <iostream>
 #include <stdexcept>
 
-namespace geli {
+namespace jelly {
 
 
 Window::Window(const std::string& title, int width, int height) :

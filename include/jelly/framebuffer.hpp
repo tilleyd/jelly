@@ -1,11 +1,11 @@
-#ifndef _GELI_FRAMEBUFFER_HPP_
-#define _GELI_FRAMEBUFFER_HPP_
+#ifndef _JELLY_FRAMEBUFFER_HPP_
+#define _JELLY_FRAMEBUFFER_HPP_
 
 #include <vector>
 
-#include <geli/texture.hpp>
+#include <jelly/texture.hpp>
 
-namespace geli {
+namespace jelly {
 
 /**
  * A framebuffer that can be used as a render target.

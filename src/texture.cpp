@@ -1,11 +1,11 @@
-#include <geli/texture.hpp>
+#include <jelly/texture.hpp>
 
 #include <stdexcept>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
-namespace geli {
+namespace jelly {
 
 
 Texture::Texture(int width, int height, Format format, Filter filter, Type type) :

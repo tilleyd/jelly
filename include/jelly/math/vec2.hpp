@@ -1,9 +1,9 @@
-#ifndef _GELI_MATH_VEC2_HPP_
-#define _GELI_MATH_VEC2_HPP_
+#ifndef _JELLY_MATH_VEC2_HPP_
+#define _JELLY_MATH_VEC2_HPP_
 
 #include <cmath>
 
-namespace geli {
+namespace jelly {
 
 class Vec2 {
 

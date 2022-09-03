@@ -1,5 +1,5 @@
-#ifndef _GELI_WINDOW_HPP_
-#define _GELI_WINDOW_HPP_
+#ifndef _JELLY_WINDOW_HPP_
+#define _JELLY_WINDOW_HPP_
 
 #include <functional>
 #include <string>
@@ -8,11 +8,11 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <geli/framebuffer.hpp>
-#include <geli/math.hpp>
-#include <geli/context.hpp>
+#include <jelly/framebuffer.hpp>
+#include <jelly/math.hpp>
+#include <jelly/context.hpp>
 
-namespace geli
+namespace jelly
 {
 
 

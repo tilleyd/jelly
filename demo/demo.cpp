@@ -3,9 +3,9 @@
 #include <cmath>
 #include <fstream>
 
-#include <geli/math.hpp>
+#include <jelly/math.hpp>
 
-using namespace geli;
+using namespace jelly;
 
 
 Demo::Demo() :

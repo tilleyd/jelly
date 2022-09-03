@@ -1,8 +1,8 @@
-#include <geli/math/vec4.hpp>
+#include <jelly/math/vec4.hpp>
 
 #include <cmath>
 
-namespace geli {
+namespace jelly {
 
 
 Vec4 operator+(const Vec4& a, const Vec4& b) {

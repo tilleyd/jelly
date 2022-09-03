@@ -1,9 +1,9 @@
-#ifndef _GELI_MATH_MAT3_HPP_
-#define _GELI_MATH_MAT3_HPP_
+#ifndef _JELLY_MATH_MAT3_HPP_
+#define _JELLY_MATH_MAT3_HPP_
 
-#include <geli/math/vec3.hpp>
+#include <jelly/math/vec3.hpp>
 
-namespace geli {
+namespace jelly {
 
 class Mat3 {
 

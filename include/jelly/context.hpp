@@ -1,13 +1,13 @@
-#ifndef _GELI_CONTEXT_HPP_
-#define _GELI_CONTEXT_HPP_
+#ifndef _JELLY_CONTEXT_HPP_
+#define _JELLY_CONTEXT_HPP_
 
 #include <map>
 
-#include <geli/framebuffer.hpp>
-#include <geli/mesh.hpp>
-#include <geli/shader.hpp>
+#include <jelly/framebuffer.hpp>
+#include <jelly/mesh.hpp>
+#include <jelly/shader.hpp>
 
-namespace geli {
+namespace jelly {
 
 class Window;
 
