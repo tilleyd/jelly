@@ -10,6 +10,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_library(jelly STATIC
     src/window.cpp
+    src/sketch.cpp
 
     src/gl/context.cpp
     src/gl/framebuffer.cpp
@@ -22,6 +23,10 @@ add_library(jelly STATIC
     src/math/vec4.cpp
     src/math/mat3.cpp
     src/math/mat4.cpp
+
+    src/mixins/canvas.cpp
+    src/mixins/keyboard.cpp
+    src/mixins/mouse.cpp
 )
 set_target_properties(jelly PROPERTIES
     VERSION ${PROJECT_VERSION}
