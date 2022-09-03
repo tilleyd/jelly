@@ -1,4 +1,4 @@
-#include <jelly/mesh.hpp>
+#include <jelly/gl/mesh.hpp>
 
 
 namespace jelly {

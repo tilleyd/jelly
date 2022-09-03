@@ -1,4 +1,4 @@
-#include <jelly/context.hpp>
+#include <jelly/gl/context.hpp>
 
 #include <GL/glew.h>
 

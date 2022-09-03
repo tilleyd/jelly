@@ -1,4 +1,4 @@
-#include <jelly/texture.hpp>
+#include <jelly/gl/texture.hpp>
 
 #include <stdexcept>
 

@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <jelly/texture.hpp>
+#include <jelly/gl/texture.hpp>
 
 namespace jelly {
 

@@ -3,11 +3,11 @@
 
 #include <memory>
 
-#include <jelly/framebuffer.hpp>
-#include <jelly/mesh.hpp>
-#include <jelly/shader.hpp>
-#include <jelly/texture.hpp>
 #include <jelly/window.hpp>
+#include <jelly/gl/framebuffer.hpp>
+#include <jelly/gl/mesh.hpp>
+#include <jelly/gl/shader.hpp>
+#include <jelly/gl/texture.hpp>
 
 class Demo
 {

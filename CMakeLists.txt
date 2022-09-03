@@ -9,12 +9,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #
 
 add_library(jelly STATIC
-    src/context.cpp
-    src/framebuffer.cpp
-    src/mesh.cpp
-    src/shader.cpp
-    src/texture.cpp
     src/window.cpp
+
+    src/gl/context.cpp
+    src/gl/framebuffer.cpp
+    src/gl/mesh.cpp
+    src/gl/shader.cpp
+    src/gl/texture.cpp
 
     src/math/vec2.cpp
     src/math/vec3.cpp

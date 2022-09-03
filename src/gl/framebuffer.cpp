@@ -1,4 +1,4 @@
-#include <jelly/framebuffer.hpp>
+#include <jelly/gl/framebuffer.hpp>
 
 #include <stdexcept>
 

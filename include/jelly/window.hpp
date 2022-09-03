@@ -8,9 +8,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <jelly/framebuffer.hpp>
+#include <jelly/gl/framebuffer.hpp>
+#include <jelly/gl/context.hpp>
 #include <jelly/math.hpp>
-#include <jelly/context.hpp>
 
 namespace jelly
 {

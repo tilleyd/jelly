@@ -1,4 +1,4 @@
-#include <jelly/shader.hpp>
+#include <jelly/gl/shader.hpp>
 
 #include <fstream>
 #include <iostream>
@@ -7,7 +7,7 @@
 
 #include <GL/glew.h>
 
-#include <jelly/context.hpp>
+#include <jelly/gl/context.hpp>
 
 namespace {
 
