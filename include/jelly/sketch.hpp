@@ -56,7 +56,18 @@ public:
      */
     void run();
 
-    std::shared_ptr<Window> jelly_window() const { return _window; }
+    Window& jelly_window() const
+    {
+        if (_window == nullptr) {
+            throw std::runtime_error("Window not available");
+        }
+        return *_window;
+    }
+
+    Context& jelly_context() const
+    {
+        return jelly_window().get_context();
+    }
 
 private:
 

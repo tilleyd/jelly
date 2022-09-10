@@ -8,12 +8,8 @@
 using namespace jelly;
 
 void MouseMixin::init() {
-    std::shared_ptr<Window> window = _sketch->jelly_window();
-    if (window == nullptr) {
-        throw std::runtime_error("Window is not available yet");
-    }
-
-    window->add_on_mouse_button([this](Window&, int button, int action, int modifier) {
+    Window& window = _sketch->jelly_window();
+    window.add_on_mouse_button([this](Window&, int button, int action, int modifier) {
         switch (action) {
             case GLFW_PRESS:
                 this->_button_pressed[button] = true;
@@ -26,7 +22,7 @@ void MouseMixin::init() {
         }
     });
 
-    window->add_on_mouse_move([this](Window&, Vec2 position, Vec2 relative) {
+    window.add_on_mouse_move([this](Window&, Vec2 position, Vec2 relative) {
         this->_mouse_position = position;
     });
 }

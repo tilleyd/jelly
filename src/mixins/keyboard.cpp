@@ -8,12 +8,9 @@
 using namespace jelly;
 
 void KeyboardMixin::init() {
-    std::shared_ptr<Window> window = _sketch->jelly_window();
-    if (window == nullptr) {
-        throw std::runtime_error("Window is not available yet");
-    }
+    Window& window = _sketch->jelly_window();
 
-    window->add_on_key([this](Window&, int key, int scancode, int action, int modifier) {
+    window.add_on_key([this](Window&, int key, int scancode, int action, int modifier) {
         switch (action) {
             case GLFW_PRESS:
                 // NOTE: We don't consider GLFW_REPEAT as a pressed key.

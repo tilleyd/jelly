@@ -2,6 +2,7 @@
 #define _JELLY_WINDOW_HPP_
 
 #include <functional>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -255,6 +256,19 @@ public:
     bool is_active() const
     {
         return _isActive;
+    }
+
+    /**
+     * Returns a reference to the drawing context.
+     *
+     * \throw std::runtime_error if the context is not created yet.
+     */
+    Context& get_context() const
+    {
+        if (_context == nullptr) {
+            throw std::runtime_error("Context not available");
+        }
+        return *_context;
     }
 
     /**
