@@ -28,6 +28,29 @@ Mesh* Mesh::square_mesh(float ext) {
     return new Mesh(vertices, normals, uvs, indices);
 }
 
+Mesh* Mesh::quad_mesh(float size) {
+    std::vector<Vec3> vertices = {
+        Vec3(0.0f, 0.0f, 0.0f),
+        Vec3(size, 0.0f, 0.0f),
+        Vec3(size, size, 0.0f),
+        Vec3(0.0f, size, 0.0f)
+    };
+    std::vector<Vec3> normals = {
+        Vec3(0.0f, 0.0f, 1.0f),
+        Vec3(0.0f, 0.0f, 1.0f),
+        Vec3(0.0f, 0.0f, 1.0f),
+        Vec3(0.0f, 0.0f, 1.0f)
+    };
+    std::vector<Vec2> uvs = {
+        Vec2(0.0f, 0.0f),
+        Vec2(1.0f, 0.0f),
+        Vec2(1.0f, 1.0f),
+        Vec2(0.0f, 1.0f)
+    };
+    std::vector<unsigned int> indices = {0, 1, 2, 0, 2, 3};
+
+    return new Mesh(vertices, normals, uvs, indices);
+}
 
 Mesh* Mesh::cube_mesh(float ext) {
     std::vector<Vec3> vertices = {

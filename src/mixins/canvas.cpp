@@ -18,3 +18,11 @@ int CanvasMixin::window_height() const {
 Vec2 CanvasMixin::window_size() const {
     return _sketch->jelly_window().get_size();
 }
+
+void CanvasMixin::clear() const {
+    _sketch->jelly_context().clear(Vec3(1.0f));
+}
+
+void CanvasMixin::clear_rgb(float r, float g, float b) const {
+    _sketch->jelly_context().clear(Vec3(r, g, b));
+}

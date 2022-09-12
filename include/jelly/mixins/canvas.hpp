@@ -41,6 +41,16 @@ protected:
      */
     Vec2 window_size() const;
 
+    /**
+     * Clears the canvas to white.
+     */
+    void clear() const;
+
+    /**
+     * Clears the canvas to a given background color.
+     */
+    void clear_rgb(float r, float g, float b) const;
+
 private:
 
     Sketch* _sketch;

@@ -15,7 +15,8 @@ namespace jelly {
 class Sketch :
     public CanvasMixin,
     public KeyboardMixin,
-    public MouseMixin
+    public MouseMixin,
+    public Render2DMixin
 {
 
 public:
@@ -56,22 +57,25 @@ public:
      */
     void run();
 
-    Window& jelly_window() const
-    {
+    Window& jelly_window() const {
         if (_window == nullptr) {
             throw std::runtime_error("Window not available");
         }
         return *_window;
     }
 
-    Context& jelly_context() const
-    {
+    Context& jelly_context() const {
         return jelly_window().get_context();
+    }
+
+    const Mat4& projection_mat() const {
+        return _projection;
     }
 
 private:
 
     std::shared_ptr<Window> _window;
+    Mat4 _projection;
 
 };
 

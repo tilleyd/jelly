@@ -161,9 +161,12 @@ void Window::_end_glfw() {
 
 
 void Window::_start_glew() {
-    glEnable(GL_DEPTH_TEST);
+    // Set default rendering flags optimized for 2D rendering.
+    glDisable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
         throw std::runtime_error("could not initialize glew");

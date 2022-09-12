@@ -23,12 +23,22 @@ public:
     Mesh& operator=(const Mesh&) = delete;
 
     /**
-     * Creates a flat square mesh in the xy-plane.
+     * Creates a flat square mesh in the xy-plane with an origin at the center.
      *
      * \param extent
      *     The square's extent from the centre in each direction.
      */
     static Mesh* square_mesh(float extent=1.0f);
+
+    /**
+     * Creates a flat square mesh in the xy-plane with an origin at the
+     * bottom-left corner. Quad meshes are easier to manipulate for drawing
+     * at specified locations compared to square meshes.
+     *
+     * \param size
+     *     The quad's size.
+     */
+    static Mesh* quad_mesh(float size=1.0f);
 
     /**
      * Creates a cube mesh.

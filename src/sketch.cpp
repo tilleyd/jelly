@@ -5,7 +5,8 @@ using namespace jelly;
 Sketch::Sketch() :
     CanvasMixin(this),
     KeyboardMixin(this),
-    MouseMixin(this)
+    MouseMixin(this),
+    Render2DMixin(this)
 {}
 
 void Sketch::run() {
@@ -15,6 +16,13 @@ void Sketch::run() {
         // first initialize mixins that require it
         this->MouseMixin::init();
         this->KeyboardMixin::init();
+        this->Render2DMixin::init();
+
+        // set the projection to orthographic by default
+        Vec2 size = w.get_size();
+        this->_projection = Mat4::orthographic(
+            0.0f, size.x(), 0.0f, size.y(), -1.0f, 1.0f
+        );
 
         this->init();
     });

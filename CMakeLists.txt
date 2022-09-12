@@ -27,6 +27,7 @@ add_library(jelly STATIC
     src/mixins/canvas.cpp
     src/mixins/keyboard.cpp
     src/mixins/mouse.cpp
+    src/mixins/render_2d.cpp
 )
 set_target_properties(jelly PROPERTIES
     VERSION ${PROJECT_VERSION}
