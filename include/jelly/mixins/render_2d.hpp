@@ -2,6 +2,7 @@
 #define _JELLY_MIXINS_RENDER_2D_HPP_
 
 #include <map>
+#include <jelly/math/vec4.hpp>
 
 namespace jelly
 {
@@ -22,7 +23,7 @@ public:
 
 protected:
 
-    Render2DMixin(Sketch* sketch): _sketch(sketch) {};
+    Render2DMixin(Sketch* sketch);
 
     /**
      * Initializes the various shaders, meshes, etc. required to perform 2D
@@ -30,23 +31,34 @@ protected:
      */
     void init();
 
-    void set_fill_rgb(float r, float g, float b);
+    void set_color(float r, float g, float b);
 
-    void set_fill_rgba(float r, float g, float b, float a);
+    void set_color(float r, float g, float b, float a);
 
-    void set_fill_value(float value);
+    void set_color(float value);
+
+    void set_stroke_size(int stroke);
 
     void fill_rectangle(int x1, int y1, int x2, int y2);
 
+    void draw_rectangle(int x1, int y1, int x2, int y2);
+
     void fill_ellipse(int x, int y, int w, int h);
+
+    void draw_ellipse(int x, int y, int w, int h);
 
 private:
 
     Sketch* _sketch;
 
-    Shader* _rectangle_shader;
-    Shader* _ellipse_shader;
+    Shader* _fill_rectangle_shader;
+    Shader* _fill_ellipse_shader;
+    Shader* _draw_rectangle_shader;
+    Shader* _draw_ellipse_shader;
     Mesh*   _quad_mesh;
+
+    Vec4 _color;
+    int _stroke_size;
 
 };
 
